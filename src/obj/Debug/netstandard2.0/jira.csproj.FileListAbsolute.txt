@@ -1,0 +1,9 @@
+C:\workspace\jira\bin\Debug\netstandard2.0\jira.deps.json
+C:\workspace\jira\bin\Debug\netstandard2.0\jira.dll
+C:\workspace\jira\bin\Debug\netstandard2.0\jira.pdb
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.csprojAssemblyReference.cache
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.csproj.CoreCompileInputs.cache
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.AssemblyInfoInputs.cache
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.AssemblyInfo.cs
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.dll
+C:\workspace\jira\obj\Debug\netstandard2.0\jira.pdb
