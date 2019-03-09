@@ -8,7 +8,7 @@ using RestSharp.Authenticators;
 namespace JiraModule
 {
     [Cmdlet(VerbsCommon.Get,"RawIssue")]
-    [OutputType(typeof(FavoriteStuff))]
+    [OutputType(typeof(Object))]
     public class GetRawIssue : PSCmdlet
     {
         private List<string> _issueList;

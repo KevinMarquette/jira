@@ -4,28 +4,16 @@ using System.Management.Automation.Runspaces;
 using System.Collections.Generic;
 using Atlassian.Jira.Linq;
 using Atlassian.Jira;
+using System.Threading.Tasks;
 
 namespace JiraModule
 {
     [Alias("Search-Issue", "Get-JqlIssue")]
     [Cmdlet(VerbsCommon.Find, "Issue")]
-    [OutputType(typeof(FavoriteStuff))]
-    public class FindIssue : PSCmdlet
+    [OutputType(typeof(Atlassian.Jira.Issue))]
+    public class FindIssue : JiraCmdlet
     {
-        private Jira _jira;
         private List<string> _issueList = new List<string>();
-
-        [Parameter(
-            Mandatory = true,
-            Position = 1,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
-        public string Uri { get; set; }
-
-        [Parameter(
-            Position = 2,
-            ValueFromPipelineByPropertyName = true)]
-        public PSCredential Credential { get; set; }
 
         [Alias("Issue", "Key", "JiraID")]
         [Parameter(
@@ -45,6 +33,8 @@ namespace JiraModule
         [Alias("Count")]
         [Parameter(Position = 2)]
         public int MaxResults { get; set; } = 50;
+
+        [Parameter()]
         public int StartAt { get; set; } = 0;
 
         [Parameter()]
@@ -54,10 +44,6 @@ namespace JiraModule
         protected override void BeginProcessing()
         {
             WriteDebug("Begin!");
-
-            string username = Credential.UserName;
-            string password = Credential.GetNetworkCredential().Password;
-            _jira = Jira.CreateRestClient(Uri, username, password);
         }
 
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
@@ -82,20 +68,11 @@ namespace JiraModule
             }
 
             WriteVerbose($"Query [{Query}]");
-            var results = _jira.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
-            if (Async)
-            {
-                WriteObject(
-                    results
-                );
-            }
-            else
-            {
-                WriteObject(
-                    results.Result
-                );
-            }
-            WriteVerbose("End!");
+            var jiraTask = JiraApi.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
+
+            WriteTaskObject( 
+                jiraTask, Async, r => {return r;}
+            );
         }
     }
 }

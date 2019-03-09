@@ -4,31 +4,19 @@ using System.Management.Automation.Runspaces;
 using System.Collections.Generic;
 using Atlassian.Jira.Linq;
 using Atlassian.Jira;
+using System.Threading.Tasks;
 
 namespace JiraModule
 {
     [Cmdlet(VerbsCommon.Get,"Issue")]
-    [OutputType(typeof(FavoriteStuff))]
-    public class GetIssue : PSCmdlet
+    [OutputType(typeof(Atlassian.Jira.Issue))]
+    public class GetIssue : JiraCmdlet
     {
-        private Jira _jira;
-
-
+        
         [Alias("Issue","Key","JiraID")]
         [Parameter(Position = 0)]
         public string[] ID { get; set; }
 
-        [Parameter(
-            Position = 1,
-            ValueFromPipelineByPropertyName = true)]
-        public PSCredential Credential { get; set; }
-
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
-        public string Uri { get; set; }
 
         [Parameter()]
         public SwitchParameter Async {get;set;} = false;
@@ -37,10 +25,6 @@ namespace JiraModule
         protected override void BeginProcessing()
         {
             WriteDebug("Begin!");
-
-            string username = Credential.UserName;
-            string password = Credential.GetNetworkCredential().Password;
-            _jira = Jira.CreateRestClient(Uri, username, password);
         }
 
         // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
@@ -48,21 +32,13 @@ namespace JiraModule
         {
             if (null != ID)
             {
-                var result = _jira.Issues.GetIssuesAsync(ID);
-                if(Async)
-                {
-                    WriteObject(
-                       result
-                    );
-                }
-                else
-                {
-                    WriteObject(
-                       result.Result.Values
-                    );
-                }
+                var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
+                WriteTaskObject( 
+                    jiraTask, Async, r => {return r.Values;}
+                );
             }
         }
+
 
         // This method will be called once at the end of pipeline execution; if no input is received, this method is not called
         protected override void EndProcessing()
