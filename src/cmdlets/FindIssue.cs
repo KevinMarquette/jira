@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Atlassian.Jira.Linq;
 using Atlassian.Jira;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace JiraModule
 {

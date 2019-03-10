@@ -9,8 +9,11 @@ $JiraUri = 'https://jira.loandepot.com'
 $cred = Get-LDRemoteCredential -RemoteTarget ld.corp.local
 $tickets = echo LDCM-14057 LDCM-14058 LDCM-14059 LDCM-14060 LDCM-14061 LDCM-14062 LDCM-14063 LDCM-14064 LDCM-14065
 $tickets = echo LDDTFT-10
+$cred = Get-Credential
+Open-JiraSession -Credential $cred -Uri 'https://devtools.ld.corp.local' -Verbose
+Open-JiraSession -Credential $cred -Uri 'https://badendpointhostname.ld.corp.local' -Verbose
 
-Get-Issue -ID $tickets -Credential $cred -Uri $JiraUri -Async 
+Get-Issue -ID $tickets -Async
 Get-Member -InputObject $b
 
 Measure-Command {

@@ -1,28 +1,33 @@
 using System;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JiraModule
 {
     /// <summary>
     /// <para type="synopsis">Waits for and unwrapps an Async result</para>
     /// <summary>
-    [Alias("Wait-AsyncResult", "Wait-JiraResult","Receive-JiraResult")]
+    [Alias("Wait-AsyncResult", "Wait-JiraResult", "Receive-JiraResult")]
     [Cmdlet(VerbsCommunications.Receive, "AsyncResult")]
-    public class ReceiveResult : PSCmdlet 
+    public class ReceiveResult : PSCmdlet
     {
-        [Alias("Result","AsyncQueryResult")]
+        [Alias("Result", "AsyncQueryResult")]
         [Parameter(
-            Mandatory=true,
-            Position=0,
-            ValueFromPipeline=true
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true
         )]
         public AsyncQueryResult InputObject { get; set; }
 
+        List<AsyncQueryResult> asyncResultList = new List<AsyncQueryResult>();
         protected override void ProcessRecord()
         {
+            asyncResultList.Add(InputObject);
             var transformed = InputObject.GetResult();
-            WriteObject(transformed,true);
+            WriteObject(transformed, true);
         }
     }
 }

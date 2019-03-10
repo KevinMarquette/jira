@@ -5,20 +5,28 @@ namespace JiraModule
 {
     public class AsyncQueryResult
     {
-        dynamic _task;
-        TaskResultTransform _resultTransform;
+        dynamic task;
+        TaskResultTransform resultTransform;
 
         public int Id 
-            => _task.Id;
+            => task.Id;
         
         public bool IsCompleted 
-            => _task.IsCompleted;
+            => task.IsCompleted;
 
         public TaskStatus Status 
-            => _task.Status;
+            => task.Status;
         
         public AggregateException Exception 
-            => _task.Exception;
+            => task.Exception;
+        
+
+
+        /// <summary>
+        /// Gets the internal Task of this object
+        /// </summary>
+        /// <returns>Task</returns>
+        public dynamic GetTask() => this.task;
         
 
         public override string ToString()
@@ -26,19 +34,16 @@ namespace JiraModule
         
         public AsyncQueryResult (dynamic task, TaskResultTransform resultTransform)
         {
-            _task = task;
-            _resultTransform = resultTransform;
+            this.task = task;
+            this.resultTransform = resultTransform;
         }
 
         public dynamic GetResult()
         {
-            var taskResult = _task.GetAwaiter().GetResult();
-            var transformed = _resultTransform(taskResult);
+            var taskResult = this.task.GetAwaiter().GetResult();
+            var transformed = this.resultTransform(taskResult);
             return transformed;
         }
 
-        /// Using getter so PowerShell does not try to resolve the task properties
-        public dynamic GetTask() => _task;
-        
     }
 }

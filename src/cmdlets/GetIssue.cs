@@ -8,42 +8,62 @@ using System.Threading.Tasks;
 
 namespace JiraModule
 {
-    [Cmdlet(VerbsCommon.Get,"Issue")]
+    /// <summary>
+    /// Gets Jira Issue by ID
+    /// </summary>
+    /// <notes>
+    /// The inputObject is the DefaultParameterSetName for a better pipeline experience
+    /// </notes>
+    [Cmdlet(VerbsCommon.Get,"Issue",DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     public class GetIssue : JiraCmdlet
     {
-        
+
         [Alias("Issue","Key","JiraID")]
-        [Parameter(Position = 0)]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = "IssueID"
+        )]
         public string[] ID { get; set; }
 
+        /// <summary>
+        /// Provides a mapping for an existing issue
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = "InputObject"
+        )]
+        public Issue InputObject { get; set; }
 
         [Parameter()]
         public SwitchParameter Async {get;set;} = false;
 
-        // This method gets called once for each cmdlet in the pipeline when the pipeline starts executing
-        protected override void BeginProcessing()
-        {
-            WriteDebug("Begin!");
-        }
 
-        // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
+        // This method will be called for each input received from the 
+        //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if (null != ID)
+            switch(ParameterSetName)
             {
-                var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
-                WriteTaskObject( 
-                    jiraTask, Async, r => {return r.Values;}
-                );
+                case "InputObject":
+                    var task = JiraApi.Issues.GetIssueAsync(InputObject.Key.ToString());
+                    WriteTaskObject( 
+                        task, Async, r => {return r;}
+                    );
+                    break;
+
+                default:
+                    var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
+                    WriteTaskObject( 
+                        jiraTask, Async, r => {return r.Values;}
+                    );
+                    break;
             }
-        }
-
-
-        // This method will be called once at the end of pipeline execution; if no input is received, this method is not called
-        protected override void EndProcessing()
-        {
-            WriteVerbose("End!");
         }
     }
 }

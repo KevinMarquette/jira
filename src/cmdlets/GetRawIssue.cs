@@ -7,9 +7,13 @@ using RestSharp.Authenticators;
 
 namespace JiraModule
 {
+    /// <summary>
+    /// Prototype using raw rest endpoint
+    /// </summary>
+    [Obsolete("Early prototype")]
     [Cmdlet(VerbsCommon.Get,"RawIssue")]
     [OutputType(typeof(Object))]
-    public class GetRawIssue : PSCmdlet
+    class GetRawIssue : PSCmdlet
     {
         private List<string> _issueList;
         private Dictionary<string,string> _headers;

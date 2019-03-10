@@ -3,54 +3,68 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using Atlassian.Jira;
 
-namespace JiraModule 
+namespace JiraModule
 {
-    public class JiraCmdlet : PSCmdlet 
+    /// <summary>
+    /// Base class for all CmdLets that make Jira Calls
+    /// </summary>
+    public class JiraCmdlet : PSCmdlet
     {
-        private static Jira _jira;
-
-        public Jira JiraApi
+        /// <summary>
+        /// This is set by calls to Open-JiraSession
+        /// </summary>
+        protected static Jira jiraApi = null;
+        protected Jira JiraApi
         {
-            get 
+            get
             {
-                if(_jira == null)
+                if (null == jiraApi)
                 {
-                    string username = Credential.UserName;
-                    string password = Credential.GetNetworkCredential().Password;
-                    _jira = Jira.CreateRestClient(Uri, username, password);
+                    ThrowTerminatingError(
+                        new ErrorRecord(
+                            new JiraConnectionException(),
+                            "TestConnectionException",
+                            ErrorCategory.ConnectionError,
+                            null
+                        )
+                    );
                 }
-                return _jira;
+                return jiraApi;
             }
         }
-        
-        
-        [Parameter(
-            Position = 1,
-            ValueFromPipelineByPropertyName = true)]
-        public PSCredential Credential { get; set; }
 
-        [Parameter(
-            Mandatory = true,
-            Position = 2,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
-        public string Uri { get; set; }
-
-        //protected delegate dynamic TaskAction(dynamic result);
-        protected void WriteTaskObject(dynamic jiraTask,bool async,TaskResultTransform resultTransform)
+        /// <summary>
+        /// Takes a Async Task and either waits for the result 
+        /// or wraps it in a PowerShell friendly AsyncQueryResult
+        /// </summary>
+        /// <param name="jiraTask">The async task</param>
+        /// <param name="async">flag to indicate if the opperation should stay async</param>
+        /// <param name="resultTransform">function to modify the task result for the client</param>
+        /// <notes>
+        /// PowerShell does not play nicely with C# tasks.
+        /// We need to box them in a PowerShell friendly object to prevent Results
+        /// from getting access by PowerShell
+        /// There are also issues unboxing the Task.Result and 
+        /// the resultTransform helps with that
+        /// </notes>
+        protected void WriteTaskObject(
+            dynamic jiraTask,
+            bool async,
+            TaskResultTransform resultTransform
+        )
         {
-            if(async)
+            if (async)
             {
-                // use this if looping on the above is causing thread locks
+                // use this if looping is causing thread locks
                 //var jiraTask = Task.Run( async () => await (JiraApi.Issues.GetIssuesAsync(ID).ConfigureAwait(false)) );
-                AsyncQueryResult asyncQueryResult = new AsyncQueryResult(jiraTask,resultTransform);
+                AsyncQueryResult asyncQueryResult = new AsyncQueryResult(jiraTask, resultTransform);
                 WriteObject(asyncQueryResult);
             }
             else
             {
                 var taskResult = jiraTask.GetAwaiter().GetResult();
                 var transformed = resultTransform(taskResult);
-                WriteObject(transformed,true);
+                WriteObject(transformed, true);
             }
         }
     }
