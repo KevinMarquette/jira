@@ -14,12 +14,13 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Get,"Issue",DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Get, "Issue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     public class GetIssue : JiraCmdlet
     {
+        Queue<AsyncQueryResult> startedTasks = new Queue<AsyncQueryResult>();
 
-        [Alias("Issue","Key","JiraID")]
+        [Alias("ID", "Key", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
@@ -40,29 +41,81 @@ namespace JiraModule
         )]
         public Issue InputObject { get; set; }
 
+        [Alias("JQL")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ParameterSetName = "Query",
+            ValueFromPipelineByPropertyName = true
+        )]
+        public string Query { get; set; }
+
+        [Alias("Count")]
+        [Parameter(
+            Position = 1,
+            ParameterSetName = "Query",
+            ValueFromPipelineByPropertyName = true
+        )]
+        public int MaxResults { get; set; } = 50;
+
+        [Parameter(
+            ParameterSetName = "Query",
+            ValueFromPipelineByPropertyName = true
+        )]
+        public int StartAt { get; set; } = 0;
+
         [Parameter()]
-        public SwitchParameter Async {get;set;} = false;
+        public SwitchParameter Async { get; set; } = false;
 
 
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            switch(ParameterSetName)
+            AsyncQueryResult queryResult = null;
+            switch (ParameterSetName)
             {
                 case "InputObject":
-                    var task = JiraApi.Issues.GetIssueAsync(InputObject.Key.ToString());
-                    WriteTaskObject( 
-                        task, Async, r => {return r;}
-                    );
+                    string issueID = InputObject.Key.ToString();
+                    WriteVerbose("Starting query for [{issueID}] from InputObject");
+                    var task = JiraApi.Issues.GetIssueAsync(issueID);
+                    queryResult = new AsyncQueryResult(task, r => { return r; });
+                    break;
+
+                case "Query":
+                    WriteVerbose($"Starting JQL query [{Query}]");
+                    var queryTask = JiraApi.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
+                    queryResult = new AsyncQueryResult(queryTask, r => { return r; });
                     break;
 
                 default:
+                    WriteVerbose($"Starting query for [{ID}]");
                     var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
-                    WriteTaskObject( 
-                        jiraTask, Async, r => {return r.Values;}
-                    );
+                    queryResult = new AsyncQueryResult(jiraTask, r => { return r.Values; });
                     break;
+            }
+
+            if (Async)
+            {
+                WriteObject(queryResult);
+            }
+            else
+            {
+                WriteDebug("Queueing running queries");
+                startedTasks.Enqueue(queryResult);
+            }
+        }
+
+        protected override void EndProcessing()
+        {
+            if (!Async)
+            {
+                WriteVerbose($"Processing [{startedTasks.Count}] running queries");
+                foreach (AsyncQueryResult query in startedTasks)
+                {
+                    WriteDebug("Waiting for a query to finish");
+                    WriteObject(query.GetResult(), true);
+                }
             }
         }
     }
