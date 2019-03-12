@@ -1,64 +1,60 @@
 using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Atlassian.Jira.Linq;
 using Atlassian.Jira;
-using System.Threading.Tasks;
 
 namespace JiraModule
 {
-    [Cmdlet(VerbsData.Save,"Issue")]
+    /// <summary>
+    /// Saves changes made to a Jira.Issue object
+    /// </summary>
+    [Cmdlet(VerbsData.Save, "Issue")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
-    public class SaveIssue : JiraCmdlet
+    [OutputType(typeof(JiraModule.AsyncResult))]
+    public class SaveIssue : Cmdlet
     {
-
-        private List<Task<Issue>> _tasks = new List<Task<Issue>>();
+        Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
         [Alias("JiraIssue")]
         [Parameter(
             Position = 0,
-            ValueFromPipeline=true
+            ValueFromPipeline = true
         )]
         public Atlassian.Jira.Issue Issue { get; set; }
 
         [Parameter()]
-        public SwitchParameter Async {get;set;} = false;
-        [Parameter()]
-        public SwitchParameter PassThru {get;set;} = false;
+        public SwitchParameter Async { get; set; } = false;
 
-        // This method gets called once for each cmdlet in the pipeline when the pipeline starts executing
-        protected override void BeginProcessing()
-        {
-            WriteDebug("Begin!");
-        }
-
-        // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if(Async)
+            var task = Issue.SaveChangesAsync();
+            var result = new AsyncResult(task, r => { return r; });
+
+            if (Async)
             {
-                _tasks.Add(Issue.SaveChangesAsync());
+                WriteObject(result);
             }
             else
             {
-                Issue.SaveChanges();
-                if(PassThru)
-                {
-                    WriteObject(Issue);
-                }
+                WriteDebug("Queueing running queries");
+                startedTasks.Enqueue(result);
             }
         }
 
-        // This method will be called once at the end of pipeline execution; if no input is received, this method is not called
         protected override void EndProcessing()
         {
-            Task.WaitAll(_tasks.ToArray());
-            if(PassThru)
+            if (!Async)
             {
-                _tasks.ForEach(i=> WriteObject(i.Result));
+                WriteVerbose($"Processing [{startedTasks.Count}] running queries");
+                foreach (AsyncResult query in startedTasks)
+                {
+                    WriteDebug("Waiting for a query to finish");
+                    WriteObject(query.GetResult(), true);
+                }
             }
-            WriteVerbose("End!");
         }
     }
 }

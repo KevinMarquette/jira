@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace JiraModule
 {
-    public class AsyncQueryResult
+    public class AsyncResult
     {
         dynamic task;
         TaskResultTransform resultTransform;
@@ -37,7 +37,7 @@ namespace JiraModule
         /// </summary>
         /// <param name="task"></param>
         /// <param name="resultTransform"></param>
-        public AsyncQueryResult (dynamic task, TaskResultTransform resultTransform)
+        public AsyncResult (dynamic task, TaskResultTransform resultTransform)
         {
             this.task = task;
             this.resultTransform = resultTransform;

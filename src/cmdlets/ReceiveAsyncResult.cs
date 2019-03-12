@@ -14,18 +14,16 @@ namespace JiraModule
     [Cmdlet(VerbsCommunications.Receive, "AsyncResult")]
     public class ReceiveResult : PSCmdlet
     {
-        [Alias("Result", "AsyncQueryResult")]
+        [Alias("Result", "AsyncResult")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipeline = true
         )]
-        public AsyncQueryResult InputObject { get; set; }
+        public AsyncResult InputObject { get; set; }
 
-        List<AsyncQueryResult> asyncResultList = new List<AsyncQueryResult>();
         protected override void ProcessRecord()
         {
-            asyncResultList.Add(InputObject);
             var transformed = InputObject.GetResult();
             WriteObject(transformed, true);
         }

@@ -1,10 +1,10 @@
 using System;
-using System.Security.Authentication;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using Atlassian.Jira;
+using System.Security.Authentication;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Atlassian.Jira;
 
 namespace JiraModule
 {
@@ -14,14 +14,16 @@ namespace JiraModule
         
         [Parameter(
             Position = 1,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         public PSCredential Credential { get; set; }
 
         [Parameter(
             Mandatory = true,
             Position = 2,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         public string Uri { get; set; }
 
         [Hidden()]

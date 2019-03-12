@@ -57,7 +57,7 @@ namespace JiraModule
             {
                 // use this if looping is causing thread locks
                 //var jiraTask = Task.Run( async () => await (JiraApi.Issues.GetIssuesAsync(ID).ConfigureAwait(false)) );
-                AsyncQueryResult asyncQueryResult = new AsyncQueryResult(jiraTask, resultTransform);
+                AsyncResult asyncQueryResult = new AsyncResult(jiraTask, resultTransform);
                 WriteObject(asyncQueryResult);
             }
             else

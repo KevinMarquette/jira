@@ -1,10 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Collections.Generic;
-using Atlassian.Jira.Linq;
-using Atlassian.Jira;
 using System.Threading.Tasks;
+using Atlassian.Jira;
 
 namespace JiraModule
 {
@@ -16,9 +15,10 @@ namespace JiraModule
     /// </notes>
     [Cmdlet(VerbsCommon.Get, "Issue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
+    [OutputType(typeof(JiraModule.AsyncResult))]
     public class GetIssue : JiraCmdlet
     {
-        Queue<AsyncQueryResult> startedTasks = new Queue<AsyncQueryResult>();
+        Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
         [Alias("ID", "Key", "JiraID")]
         [Parameter(
@@ -72,26 +72,26 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            AsyncQueryResult queryResult = null;
+            AsyncResult queryResult = null;
             switch (ParameterSetName)
             {
                 case "InputObject":
                     string issueID = InputObject.Key.ToString();
                     WriteVerbose("Starting query for [{issueID}] from InputObject");
                     var task = JiraApi.Issues.GetIssueAsync(issueID);
-                    queryResult = new AsyncQueryResult(task, r => { return r; });
+                    queryResult = new AsyncResult(task, r => { return r; });
                     break;
 
                 case "Query":
                     WriteVerbose($"Starting JQL query [{Query}]");
                     var queryTask = JiraApi.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
-                    queryResult = new AsyncQueryResult(queryTask, r => { return r; });
+                    queryResult = new AsyncResult(queryTask, r => { return r; });
                     break;
 
                 default:
                     WriteVerbose($"Starting query for [{ID}]");
                     var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
-                    queryResult = new AsyncQueryResult(jiraTask, r => { return r.Values; });
+                    queryResult = new AsyncResult(jiraTask, r => { return r.Values; });
                     break;
             }
 
@@ -111,10 +111,10 @@ namespace JiraModule
             if (!Async)
             {
                 WriteVerbose($"Processing [{startedTasks.Count}] running queries");
-                foreach (AsyncQueryResult query in startedTasks)
+                foreach (AsyncResult result in startedTasks)
                 {
-                    WriteDebug("Waiting for a query to finish");
-                    WriteObject(query.GetResult(), true);
+                    WriteDebug("Waiting for an async result to finish");
+                    WriteObject(result.GetResult(), true);
                 }
             }
         }
