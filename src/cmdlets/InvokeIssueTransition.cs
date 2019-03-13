@@ -52,30 +52,27 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if(ParameterSetName == "InputObject")
+            if(ParameterSetName == "IssueID") 
             {
-                var update = new WorkflowTransitionUpdates();
-                // add comment to update
-                
-                string issueID = InputObject.Key.ToString();
-                var result = new AsyncAction(
-                    jiraApi.Issues.ExecuteWorkflowActionAsync(
-                        InputObject,
-                        Action,
-                        update
-                    )
-                );
-                
-                startedTasks.Add(result);
+                startedTasks.AddRange(
+                    from node in ID 
+                        select new AsyncAction(
+                            JiraApi.Issues.GetIssueAsync(node).ContinueWith(
+                                async issue => (await issue).WorkflowTransitionAsync(Action),
+                                TaskContinuationOptions.AttachedToParent
+                            )
+                        )
+                );                
             }
             else
             {
-                var results = from node in ID
-                    select new AsyncAction(
-                        jiraApi.Issues.DeleteIssueAsync(node)
-                    );
-                
-                startedTasks.AddRange(results);
+                startedTasks.Add(
+                    new AsyncAction(
+                        InputObject.WorkflowTransitionAsync(
+                            Action
+                        )
+                    )
+                );
             }
         }
 
