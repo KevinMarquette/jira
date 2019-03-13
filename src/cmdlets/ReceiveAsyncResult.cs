@@ -11,21 +11,42 @@ namespace JiraModule
     /// <para type="synopsis">Waits for and unwrapps an Async result</para>
     /// <summary>
     [Alias("Wait-AsyncResult", "Wait-JiraResult", "Receive-JiraResult")]
-    [Cmdlet(VerbsCommunications.Receive, "AsyncResult")]
+    [Cmdlet(
+        VerbsCommunications.Receive, 
+        "AsyncResult", 
+        DefaultParameterSetName = "AsyncResult"
+    )]
     public class ReceiveResult : PSCmdlet
     {
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = "AsyncAction"
+        )]
+        public AsyncAction AsyncAction { get; set; }
+
         [Alias("Result", "AsyncResult")]
         [Parameter(
             Mandatory = true,
             Position = 0,
-            ValueFromPipeline = true
+            ValueFromPipeline = true,
+            ParameterSetName = "AsyncResult"
         )]
         public AsyncResult InputObject { get; set; }
 
         protected override void ProcessRecord()
         {
-            var transformed = InputObject.GetResult();
-            WriteObject(transformed, true);
+            switch (ParameterSetName)
+            {
+                case "AsyncResult":
+                    WriteObject(InputObject.GetResult(), true);
+                    break;
+
+                default:
+                    AsyncAction.Wait();
+                    break;
+            }
         }
     }
 }

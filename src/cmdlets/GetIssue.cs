@@ -8,7 +8,7 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID
+    /// Gets Jira Issue by ID or Query
     /// </summary>
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
@@ -20,7 +20,7 @@ namespace JiraModule
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
-        [Alias("ID", "Key", "JiraID")]
+        [Alias("Key", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
@@ -110,7 +110,7 @@ namespace JiraModule
         {
             if (!Async)
             {
-                WriteVerbose($"Processing [{startedTasks.Count}] running queries");
+                WriteDebug($"Processing [{startedTasks.Count}] running queries");
                 foreach (AsyncResult result in startedTasks)
                 {
                     WriteDebug("Waiting for an async result to finish");

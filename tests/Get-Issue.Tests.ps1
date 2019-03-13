@@ -13,18 +13,6 @@ Describe "function Get-Issue" {
         $issue.Key | Should -Be $Ticket
     }
 
-    It "Gets an issue by ID over pipe" {
-        $issue = $Ticket | Get-Issue
-        $issue | Should -Not -BeNullOrEmpty
-        $issue.Key | Should -Be $Ticket
-    }
-
-    It "Gets an issue by id by position" {
-        $issue = Get-Issue $Ticket
-        $issue | Should -Not -BeNullOrEmpty
-        $issue.Key | Should -Be $Ticket
-    }
-
     It "Gets an async issue" {
         $result = Get-Issue -ID $Ticket -Async
         $result | Should -Not -BeNullOrEmpty
