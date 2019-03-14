@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atlassian.SDK" Version="10.4.0" />
+    <PackageReference Include="Json.Net" Version="1.0.16" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
