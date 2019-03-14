@@ -49,9 +49,6 @@ namespace JiraModule
         )]
         public string Comment { get; set; }
 
-        [Parameter()]
-        public SwitchParameter Async { get; set; } = false;
-
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
@@ -59,9 +56,10 @@ namespace JiraModule
             if (ParameterSetName == "InputObject")
             {
                 var result = new AsyncAction(
+                    $"Add comment to issue [{InputObject.Key}]",
                     InputObject.AddCommentAsync(Comment)
                 );
-                startedTasks.Add(result);                
+                startedTasks.Add(result);
             }
             else
             {
@@ -70,6 +68,7 @@ namespace JiraModule
                 comment.Author = Environment.UserName;
                 var result = from node in ID
                              select new AsyncAction(
+                                 $"Add comment to issue [{node}]",
                                  JiraApi.Issues.AddCommentAsync(node, comment)
                              );
 
@@ -79,18 +78,11 @@ namespace JiraModule
 
         protected override void EndProcessing()
         {
-            if (Async)
+            WriteDebug($"Processing [{startedTasks.Count}] running queries");
+            foreach (var result in startedTasks)
             {
-                WriteObject(startedTasks,true);
-            }
-            else
-            {
-                WriteDebug($"Processing [{startedTasks.Count}] running queries");
-                foreach (var result in startedTasks)
-                {
-                    WriteDebug("Waiting for an async result to finish");
-                    result.Wait();
-                }
+                WriteDebug("Waiting for an async result to finish");
+                result.Wait();
             }
         }
     }

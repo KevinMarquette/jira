@@ -6,6 +6,8 @@ namespace JiraModule
     public class AsyncAction
     {
         dynamic task;
+
+        public string Description {get;set;}
         TaskResultTransform resultTransform = 
             result => { return result; };
         
@@ -32,9 +34,10 @@ namespace JiraModule
         public override string ToString()
             => $"AsyncResult[{Status}]";
         
-        public AsyncAction (dynamic task)
+        public AsyncAction (string description, dynamic task)
         {
             this.task = task;
+            this.Description = description;
         }
 
         /// <summary>
@@ -42,7 +45,10 @@ namespace JiraModule
         /// </summary>
         public void Wait()
         {
-            this.task.GetAwaiter().GetResult();
+            Action action = () 
+                => this.task.GetAwaiter().GetResult();
+
+            JiraModuleException.Try(Description, action);            
         }
     }
 }

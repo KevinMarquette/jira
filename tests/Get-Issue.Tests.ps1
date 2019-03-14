@@ -2,7 +2,7 @@ Describe "function Get-Issue" {
     BeforeAll {
         $JiraUri = 'https://jira.loandepot.com'
         $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
-        $Ticket = "LDDTFT-10"
+        $Ticket = "LDDTFT-19"
 
         Open-JiraSession -Credential $Credential -Uri $JiraUri
     }

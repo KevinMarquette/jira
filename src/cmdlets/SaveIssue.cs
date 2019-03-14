@@ -25,35 +25,24 @@ namespace JiraModule
         )]
         public Atlassian.Jira.Issue Issue { get; set; }
 
-        [Parameter()]
-        public SwitchParameter Async { get; set; } = false;
-
         protected override void ProcessRecord()
         {
-            var task = Issue.SaveChangesAsync();
-            var result = new AsyncResult(task, r => { return r; });
+            var result = new AsyncResult(
+                $"Save issue [{Issue.Key}]",
+                Issue.SaveChangesAsync()
+            );
 
-            if (Async)
-            {
-                WriteObject(result);
-            }
-            else
-            {
-                WriteDebug("Queueing running queries");
-                startedTasks.Enqueue(result);
-            }
+            startedTasks.Enqueue(result);
+        
         }
 
         protected override void EndProcessing()
         {
-            if (!Async)
+            WriteVerbose($"Processing [{startedTasks.Count}] running queries");
+            foreach (AsyncResult query in startedTasks)
             {
-                WriteVerbose($"Processing [{startedTasks.Count}] running queries");
-                foreach (AsyncResult query in startedTasks)
-                {
-                    WriteDebug("Waiting for a query to finish");
-                    WriteObject(query.GetResult(), true);
-                }
+                WriteDebug("Waiting for a query to finish");
+                WriteObject(query.GetResult(), true);
             }
         }
     }

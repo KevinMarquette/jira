@@ -17,11 +17,18 @@ namespace JiraModule
         /// </summary>
         /// <param name="task"></param>
         /// <param name="resultTransform"></param>
-        public AsyncResult (dynamic task, TaskResultTransform resultTransform) : base(task as Task)
+        public AsyncResult (
+            string description,
+            dynamic task, 
+            TaskResultTransform resultTransform 
+        ) : base(description, task as Task)
         {
             this.resultTransform = resultTransform;
         }
-        public AsyncResult (dynamic task) : base(task as Task) {}
+        public AsyncResult (
+            string description,
+            dynamic task
+        ) : base(description, task as Task) {}
 
         /// <summary>
         /// Wiats for the task to finish and then return the result
@@ -29,8 +36,11 @@ namespace JiraModule
         /// </summary>
         public dynamic GetResult()
         {
-            var task = GetTask();
-            var taskResult = task.GetAwaiter().GetResult();
+            Func<dynamic> action = () 
+                => GetTask().GetAwaiter().GetResult();
+                
+            var taskResult = JiraModuleException.Try(Description, action);
+            
             var transformed = this.resultTransform(taskResult);
             return transformed;
         }

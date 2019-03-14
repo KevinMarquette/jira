@@ -9,12 +9,13 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID
+    /// Transitions a jira issue to a new status
     /// </summary>
-    /// <notes>
-    /// The inputObject is the DefaultParameterSetName for a better pipeline experience
-    /// </notes>
-    [Cmdlet(VerbsLifecycle.Invoke, "IssueTransition", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(
+        VerbsLifecycle.Invoke, 
+        "IssueTransition", 
+        DefaultParameterSetName = "InputObject"
+    )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class StepIssueTransition : JiraCmdlet
@@ -42,34 +43,49 @@ namespace JiraModule
         )]
         public Issue InputObject { get; set; }
 
-        [Parameter()]
-        public string Action {get;set;}
-
-        [Parameter()]
-        public SwitchParameter Async { get; set; } = false;
+        /// <summary>
+        /// The workflow value for the ticket transition
+        /// </summary>
+        /// <value></value>
+        [Alias("Action","Target")]
+        [Parameter(
+            ValueFromPipeline = true
+        )]
+        public string TransitionTo { get; set; }
 
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if(ParameterSetName == "IssueID") 
+            string message = "";
+            if (ParameterSetName == "IssueID")
             {
-                startedTasks.AddRange(
-                    from node in ID 
-                        select new AsyncAction(
-                            JiraApi.Issues.GetIssueAsync(node).ContinueWith(
-                                async issue => (await issue).WorkflowTransitionAsync(Action),
-                                TaskContinuationOptions.AttachedToParent
+                var issues = JiraApi.Issues.GetIssuesAsync(ID).GetAwaiter().GetResult();
+                foreach (Issue issue in issues.Values)
+                {
+                    message = $"Transitioning issue [{issue.Key}] to [{TransitionTo}]";
+                    WriteVerbose(message);
+
+                    startedTasks.Add(
+                        new AsyncAction(
+                            message,
+                            issue.WorkflowTransitionAsync(
+                                TransitionTo
                             )
                         )
-                );                
+                    );
+                }
             }
             else
             {
+                message = $"Transitioning issue [{InputObject.Key}] to [{TransitionTo}]";
+                WriteVerbose(message);
+                    
                 startedTasks.Add(
                     new AsyncAction(
+                        message,
                         InputObject.WorkflowTransitionAsync(
-                            Action
+                            TransitionTo
                         )
                     )
                 );
@@ -78,18 +94,11 @@ namespace JiraModule
 
         protected override void EndProcessing()
         {
-            if (Async)
+            WriteDebug($"Processing [{startedTasks.Count}] running queries");
+            foreach (var result in startedTasks)
             {
-                WriteObject(startedTasks,true);
-            }
-            else
-            {
-                WriteDebug($"Processing [{startedTasks.Count}] running queries");
-                foreach (var result in startedTasks)
-                {
-                    WriteDebug("Waiting for an async result to finish");
-                    result.Wait();
-                }
+                WriteDebug("Waiting for an async result to finish");
+                result.Wait();
             }
         }
     }

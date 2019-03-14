@@ -73,25 +73,34 @@ namespace JiraModule
         protected override void ProcessRecord()
         {
             AsyncResult queryResult = null;
+            string message = "";
+
             switch (ParameterSetName)
             {
                 case "InputObject":
                     string issueID = InputObject.Key.ToString();
-                    WriteVerbose("Starting query for [{issueID}] from InputObject");
+                    message = $"Starting query for [{issueID}] from InputObject";
+                    WriteVerbose(message);
                     var task = JiraApi.Issues.GetIssueAsync(issueID);
-                    queryResult = new AsyncResult(task, r => { return r; });
+                    queryResult = new AsyncResult(message,task);
                     break;
 
                 case "Query":
-                    WriteVerbose($"Starting JQL query [{Query}]");
+                    message = $"Starting JQL query [{Query}]";
+                    WriteVerbose(message);
                     var queryTask = JiraApi.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
-                    queryResult = new AsyncResult(queryTask, r => { return r; });
+                    queryResult = new AsyncResult(message,queryTask);
                     break;
 
                 default:
-                    WriteVerbose($"Starting query for [{ID}]");
+                    message = $"Starting query for [{ID}]";
+                    WriteVerbose(message);
                     var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
-                    queryResult = new AsyncResult(jiraTask, r => { return r.Values; });
+                    queryResult = new AsyncResult(
+                        message,
+                        jiraTask, 
+                        result => { return result.Values; }
+                    );
                     break;
             }
 

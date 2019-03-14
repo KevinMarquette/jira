@@ -96,7 +96,10 @@ namespace JiraModule
             {
                 issue.Type = Type;
             }
-            var result = new AsyncResult(JiraApi.Issues.CreateIssueAsync(issue));
+            var result = new AsyncResult(
+                "Create new issue",
+                JiraApi.Issues.CreateIssueAsync(issue)
+            );
 
             if (Async)
             {

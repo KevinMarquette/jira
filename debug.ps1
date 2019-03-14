@@ -27,7 +27,7 @@ Measure-Command {
 }
 Get-Issue2 -Query 'issuekey in ("LDCM-14057")' -Credential $cred -Verbose -Uri $JiraUri -OutVariable result
 Measure-Command {
-    $r = Search-Issue -Query 'status = "Ready for Release" ' -Credential $cred -Verbose -Uri $JiraUri -Count 1000 -Async
+    $r = Search-Issue -Query 'status = "Ready for Release"' -Credential $cred -Verbose -Uri $JiraUri -Count 1000 -Async
 }
 
 # LDDTFT-10

@@ -52,8 +52,12 @@ namespace JiraModule
         {
             if(ParameterSetName == "InputObject")
             {
+                string message = $"Removing issue [{InputObject.Key}]";
+                WriteVerbose(message);
+                    
                 string issueID = InputObject.Key.ToString();
                 var result = new AsyncResult(
+                    message,
                     jiraApi.Issues.DeleteIssueAsync(issueID)
                 );
                 startedTasks.Add(result);
@@ -62,6 +66,7 @@ namespace JiraModule
             {
                 var results = from node in ID
                     select new AsyncResult(
+                        $"Removing issue [{InputObject.Key}]",
                         jiraApi.Issues.DeleteIssueAsync(node)
                     );
                 

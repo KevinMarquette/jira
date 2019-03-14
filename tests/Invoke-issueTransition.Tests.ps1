@@ -2,21 +2,14 @@ Describe "function Invoke-IssueTransition" {
     BeforeAll {
         $JiraUri = 'https://jira.loandepot.com'
         $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
-        $Ticket = "LDDTFT-14"
+        $Ticket = "LDDTFT-13"
 
         Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
 
     It "Transition by ID" {
-        Invoke-IssueTransition -ID $ticket -Action "In Progress4"
-    }
-    It "Transition by ID async" {
-        Invoke-IssueTransition -ID $ticket -Action "Open" -Async |
-            Receive-AsyncResult
-    }
-
-    It "Add comment by ID async" {
-        Add-Comment -ID $ticket -Comment 'Test Comment 2' -Async
+        Invoke-IssueTransition -ID $ticket -TransitionTo "In Progress"
+        Invoke-IssueTransition -ID $ticket -TransitionTo "Open"
     }
 
     It "Add comment by issue" {

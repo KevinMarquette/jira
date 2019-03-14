@@ -1,4 +1,6 @@
 using System;
+using System.Security.Authentication;
+using System.Text.RegularExpressions;
 
 namespace JiraModule
 {
@@ -12,6 +14,50 @@ namespace JiraModule
         
         public JiraModuleException(string message, Exception inner)
             : base(message, inner) {}
-        
+
+        static public void Try(string message, Action action )
+        {
+            Try(message, () => { action(); return 0; });
+        }
+
+        static public T Try<T>(string message, Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (AuthenticationException ex)
+            {
+                string exMessage = $"Error with {message}: Please verify the credentials are correct and you have authorization to access this Jira endpoint";
+                throw new JiraAuthenticationException(exMessage, ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                string exMessage = CreateExceptionMessage(message,ex);
+                throw new JiraInvalidActionException(exMessage, ex);
+            }
+            catch (Exception ex)
+            {
+                string exMessage = CreateExceptionMessage(message,ex);
+                throw new JiraModuleException(exMessage, ex);
+            }
+        }
+
+        public static string CreateExceptionMessage(string message, Exception ex)
+        {
+            string exMessage = $"{ex.GetType()} with {message}:";
+                
+            // Some exception messages include raw HTML from the remote endpoint
+            var htmlCheck = new Regex("html|doctype",RegexOptions.IgnoreCase);
+            if(htmlCheck.IsMatch(ex.Message))
+            {
+                exMessage += " Check the inner exception for the response from server. ";
+            }
+            else
+            {
+                exMessage += $" Message [{ex.Message}]";
+            }
+            return exMessage;
+        }
     }
 }
