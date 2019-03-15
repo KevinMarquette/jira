@@ -32,7 +32,7 @@ namespace JiraModule
         
 
         public override string ToString()
-            => $"AsyncResult[{Status}]";
+            => $"AsyncAction[{Status}]";
         
         public AsyncAction (string description, dynamic task)
         {
