@@ -13,107 +13,165 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Set, "Issue", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Set, "Issue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SetIssue : JiraCmdlet
     {
-        Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
+        List<AsyncAction> startedTasks = new List<AsyncAction>();
+
+        [Alias("Key", "JiraID")]
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = "IssueID"
+        )]
+        public string[] ID { get; set; }
+
+        /// <summary>
+        /// Provides a mapping for an existing issue
+        /// </summary>
+        [Parameter(
+            Mandatory = true,
+            Position = 0,
+            ValueFromPipeline = true,
+            ParameterSetName = "InputObject"
+        )]
+        public Issue InputObject { get; set; }
 
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
-        public string Project {get;set;}
+        public string Project { get; set; }
 
         [Parameter(
             ValueFromPipelineByPropertyName = true
         )]
-        public string Assignee {get;set;}
+        public string Assignee { get; set; }
 
         [Parameter(
             ValueFromPipelineByPropertyName = true
         )]
-        public string Description {get;set;}
-        
-        [Parameter(
-            ValueFromPipelineByPropertyName = true
-        )]
-        public string Reporter {get;set;}
-
-        [Parameter(
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true
-        )]
-        public string Summary {get;set;}
+        public string Description { get; set; }
 
         [Parameter(
             ValueFromPipelineByPropertyName = true
         )]
-        public string Priority {get;set;}
+        public string Reporter { get; set; }
 
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
-        public string Type {get;set;}
+        public string Summary { get; set; }
 
         [Parameter(
             ValueFromPipelineByPropertyName = true
         )]
-        public string ParentIssueKey {get;set;}
+        public string Priority { get; set; }
 
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true
+        )]
+        public string Type { get; set; }
 
+        [Parameter(
+            ValueFromPipelineByPropertyName = true
+        )]
+        public string ParentIssueKey { get; set; }
+
+        public bool PassThru {get;set;} = false;
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            var issue = new Issue(JiraApi,Project,ParentIssueKey);
-            if( null != Assignee )
+            string message = "";
+            switch (ParameterSetName)
+            {
+                case "InputObject":
+                    SetIssueProperties(InputObject);
+
+                    message = $"Saving [{InputObject.Key}]";
+                    WriteVerbose(message);
+
+                    startedTasks.Add(
+                        new AsyncAction(
+                            message,
+                            InputObject.SaveChangesAsync()
+                        )
+                    );
+                    break;
+
+                default:
+                    var issues = new AsyncResult(
+                        "Querying for tickets",
+                        JiraApi.Issues.GetIssuesAsync(ID)
+                    ).GetResult();
+
+                    foreach (Issue issue in issues)
+                    {
+                        SetIssueProperties(issue);
+                        
+                        message = $"Saving [{InputObject.Key}]";
+                        WriteVerbose(message);
+
+                        startedTasks.Add(
+                           new AsyncAction(
+                               message,
+                               InputObject.SaveChangesAsync()
+                           )
+                       );
+                    }
+                    break;
+            }
+        }
+
+        Issue SetIssueProperties(Issue issue)
+        {
+            if (null != Assignee)
             {
                 issue.Assignee = Assignee;
             }
-            if( null != Description )
+            if (null != Description)
             {
                 issue.Description = Description;
             }
-            if( null != Reporter )
+            if (null != Reporter)
             {
                 issue.Reporter = Reporter;
             }
-            if( null != Summary )
+            if (null != Summary)
             {
                 issue.Summary = Summary;
             }
-            if( null != Priority )
+            if (null != Priority)
             {
                 issue.Priority = Priority;
             }
-            if( null != Type )
+            if (null != Type)
             {
                 issue.Type = Type;
             }
-            // Create issue only returns the ID, so we also need the object
-            var result = new AsyncResult(
-                $"Get new issue from project [{Project}]",
-                jiraApi.Issues.GetIssueAsync( 
-                    new AsyncResult(
-                        $"Create new issue in project [{Project}]",
-                        JiraApi.Issues.CreateIssueAsync(issue)
-                    ).GetResult()
-                )
-            );
-            
-            startedTasks.Enqueue(result);
+            return issue;
         }
-
+        
         protected override void EndProcessing()
         {
             WriteDebug($"Processing [{startedTasks.Count}] running queries");
             foreach (AsyncResult result in startedTasks)
             {
                 WriteDebug("Waiting for an async result to finish");
-                WriteObject(result.GetResult(), true);
+                if(PassThru)
+                {
+                    WriteObject(result.GetResult(), true);
+                }
+                else
+                {
+                    result.Wait();
+                }
             }
         }
     }
