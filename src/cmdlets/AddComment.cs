@@ -14,7 +14,7 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Add, "Comment", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Add, "Comment", DefaultParameterSetName = "JiraID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class AddComment : JiraCmdlet
@@ -25,7 +25,6 @@ namespace JiraModule
         [Parameter(
             Mandatory = true,
             Position = 0,
-            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
@@ -36,7 +35,7 @@ namespace JiraModule
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 1,
+            Position = 0,
             ValueFromPipeline = true,
             ParameterSetName = "InputObject"
         )]
@@ -44,7 +43,7 @@ namespace JiraModule
 
         [Parameter(
             Mandatory = true,
-            ValueFromPipeline = true,
+            Position = 1,
             ValueFromPipelineByPropertyName = true
         )]
         public string Comment { get; set; }

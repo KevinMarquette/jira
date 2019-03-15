@@ -14,6 +14,12 @@ Describe "function Get-Issue" {
         $issue.Key | Should -Be $Ticket
     }
 
+    It "Gets an issue by ID positionaly" {
+        $issue = Get-Issue $Ticket
+        $issue | Should -Not -BeNullOrEmpty
+        $issue.Key | Should -Be $Ticket
+    }
+
     It "Gets an async issue" {
         $result = Get-Issue -ID $Ticket -Async
         $result | Should -Not -BeNullOrEmpty

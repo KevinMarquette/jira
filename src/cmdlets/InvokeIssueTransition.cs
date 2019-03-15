@@ -14,7 +14,7 @@ namespace JiraModule
     [Cmdlet(
         VerbsLifecycle.Invoke, 
         "IssueTransition", 
-        DefaultParameterSetName = "InputObject"
+        DefaultParameterSetName = "IssueID"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
@@ -26,7 +26,6 @@ namespace JiraModule
         [Parameter(
             Mandatory = true,
             Position = 0,
-            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
@@ -49,7 +48,9 @@ namespace JiraModule
         /// <value></value>
         [Alias("Action","Target")]
         [Parameter(
-            ValueFromPipeline = true
+            Mandatory = true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = true
         )]
         public string TransitionTo { get; set; }
 

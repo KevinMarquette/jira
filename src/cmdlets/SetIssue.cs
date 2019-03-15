@@ -13,10 +13,10 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.New, "Issue", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Set, "Issue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class NewIssue : JiraCmdlet
+    public class SetIssue : JiraCmdlet
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
@@ -62,6 +62,7 @@ namespace JiraModule
             ValueFromPipelineByPropertyName = true
         )]
         public string ParentIssueKey {get;set;}
+
 
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called

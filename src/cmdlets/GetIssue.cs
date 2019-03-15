@@ -13,7 +13,7 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Get, "Issue", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Get, "Issue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class GetIssue : JiraCmdlet
@@ -24,7 +24,6 @@ namespace JiraModule
         [Parameter(
             Mandatory = true,
             Position = 0,
-            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]

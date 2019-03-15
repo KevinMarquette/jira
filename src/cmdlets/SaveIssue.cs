@@ -16,7 +16,7 @@ namespace JiraModule
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SaveIssue : Cmdlet
     {
-        Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
+        Queue<AsyncAction> startedTasks = new Queue<AsyncAction>();
 
         [Alias("JiraIssue")]
         [Parameter(
@@ -27,22 +27,21 @@ namespace JiraModule
 
         protected override void ProcessRecord()
         {
-            var result = new AsyncResult(
+            var result = new AsyncAction(
                 $"Save issue [{Issue.Key}]",
                 Issue.SaveChangesAsync()
             );
 
             startedTasks.Enqueue(result);
-        
         }
 
         protected override void EndProcessing()
         {
             WriteVerbose($"Processing [{startedTasks.Count}] running queries");
-            foreach (AsyncResult query in startedTasks)
+            foreach (AsyncAction query in startedTasks)
             {
                 WriteDebug("Waiting for a query to finish");
-                WriteObject(query.GetResult(), true);
+                query.Wait();
             }
         }
     }

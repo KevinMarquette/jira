@@ -14,7 +14,7 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Remove, "Issue", DefaultParameterSetName = "InputObject")]
+    [Cmdlet(VerbsCommon.Remove, "Issue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class RemoveIssue : JiraCmdlet
@@ -25,7 +25,6 @@ namespace JiraModule
         [Parameter(
             Mandatory = true,
             Position = 0,
-            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
@@ -42,10 +41,6 @@ namespace JiraModule
         )]
         public Issue InputObject { get; set; }
 
-        [Parameter()]
-        public SwitchParameter Async { get; set; } = false;
-
-
         // This method will be called for each input received from the 
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
@@ -56,11 +51,12 @@ namespace JiraModule
                 WriteVerbose(message);
                     
                 string issueID = InputObject.Key.ToString();
-                var result = new AsyncResult(
-                    message,
-                    jiraApi.Issues.DeleteIssueAsync(issueID)
+                startedTasks.Add(
+                    new AsyncResult(
+                        message,
+                        jiraApi.Issues.DeleteIssueAsync(issueID)
+                    )
                 );
-                startedTasks.Add(result);
             }
             else
             {
@@ -76,14 +72,11 @@ namespace JiraModule
 
         protected override void EndProcessing()
         {
-            if (!Async)
+            WriteDebug($"Processing [{startedTasks.Count}] running queries");
+            foreach (AsyncResult result in startedTasks)
             {
-                WriteDebug($"Processing [{startedTasks.Count}] running queries");
-                foreach (AsyncResult result in startedTasks)
-                {
-                    WriteDebug("Waiting for an async result to finish");
-                    result.Wait();
-                }
+                WriteDebug("Waiting for an async result to finish");
+                result.Wait();
             }
         }
     }

@@ -20,7 +20,7 @@ namespace JiraModule
 
         [Parameter(
             Mandatory = true,
-            Position = 2,
+            Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true
         )]
