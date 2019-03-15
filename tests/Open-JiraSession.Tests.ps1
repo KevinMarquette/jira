@@ -4,37 +4,37 @@ Describe "CmdLet Open-JiraSession" {
         $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
     }
 
-    It "Invalid URI" {
+    It "Invalid URI should throw" {
         { 
             Open-JiraSession -Credential $Credential -Uri "INVALID_URI" 
-        } | Should -Throw -ExceptionType ([System.UriFormatException])
+        } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
-    It "Invalid Hostname" {
+    It "Invalid Hostname should throw" {
         { 
             Open-JiraSession -Credential $Credential -Uri "HTTP://MISSINGHOST" 
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
-    It "Unresponsive host" {
+    It "Unresponsive host should throw" {
         { 
             Open-JiraSession -Credential $Credential -Uri "https://localhost" 
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
-    It "Live but invalid endpoint" {
+    It "Live but invalid endpoint should throw" {
         { 
             Open-JiraSession -Credential $Credential -Uri "https://devtools.ld.corp.local" 
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
     
-    It "Bad Credential" {
+    It "Bad Credential should throw" {
         $password = "mypassword" | ConvertTo-SecureString -asPlainText -Force
         $username = "joedirt" 
         $badCredential = New-Object System.Management.Automation.PSCredential($username,$password)
         { 
             Open-JiraSession -Credential $badCredential -Uri $JiraUri 
-        } | Should -Throw -ExceptionType ([System.Security.Authentication.AuthenticationException])
+        } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Establishes a connection to Jira endpoint" {

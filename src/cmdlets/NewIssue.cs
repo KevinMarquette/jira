@@ -96,32 +96,27 @@ namespace JiraModule
             {
                 issue.Type = Type;
             }
+            // Create issue only returns the ID, so we also need the object
             var result = new AsyncResult(
-                "Create new issue",
-                JiraApi.Issues.CreateIssueAsync(issue)
+                $"Get new issue from project [{Project}]",
+                jiraApi.Issues.GetIssueAsync( 
+                    new AsyncResult(
+                        $"Create new issue in project [{Project}]",
+                        JiraApi.Issues.CreateIssueAsync(issue)
+                    ).GetResult()
+                )
             );
-
-            if (Async)
-            {
-                WriteObject(result);
-            }
-            else
-            {
-                WriteDebug("Queueing running queries");
-                startedTasks.Enqueue(result);
-            }
+            
+            startedTasks.Enqueue(result);
         }
 
         protected override void EndProcessing()
         {
-            if (!Async)
+            WriteDebug($"Processing [{startedTasks.Count}] running queries");
+            foreach (AsyncResult result in startedTasks)
             {
-                WriteDebug($"Processing [{startedTasks.Count}] running queries");
-                foreach (AsyncResult result in startedTasks)
-                {
-                    WriteDebug("Waiting for an async result to finish");
-                    WriteObject(result.GetResult(), true);
-                }
+                WriteDebug("Waiting for an async result to finish");
+                WriteObject(result.GetResult(), true);
             }
         }
     }

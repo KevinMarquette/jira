@@ -14,6 +14,10 @@ Describe "function New-Issue" {
             Type    = "New Feature"
         }
         $issue = New-Issue @newIssueSplat
-        $issue | Should -Not -BeNullOrEmpty        
+        $issueID = $issue.Key
+        $issue | Should -Not -BeNullOrEmpty
+        $issue | Remove-Issue
+        $issue2 = Get-Issue -ID $issueID   
+        $issue2 | Should -BeNullOrEmpty
     }
 }

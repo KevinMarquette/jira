@@ -20,15 +20,13 @@ namespace JiraModule
         public AsyncResult (
             string description,
             dynamic task, 
-            TaskResultTransform resultTransform 
+            TaskResultTransform resultTransform
         ) : base(description, task as Task)
         {
             this.resultTransform = resultTransform;
         }
-        public AsyncResult (
-            string description,
-            dynamic task
-        ) : base(description, task as Task) {}
+        public AsyncResult (string description, dynamic task) 
+            : base(description, task as Task) {}
 
         /// <summary>
         /// Wiats for the task to finish and then return the result

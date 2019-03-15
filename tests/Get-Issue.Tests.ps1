@@ -3,6 +3,7 @@ Describe "function Get-Issue" {
         $JiraUri = 'https://jira.loandepot.com'
         $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
         $Ticket = "LDDTFT-13"
+        $MissingTicket = "MISSING-13"
 
         Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
@@ -51,4 +52,24 @@ Describe "function Get-Issue" {
         $issue | Should -HaveCount $result.Count
     }
 
+    It "Gets Jira issue by query" {
+        Get-Issue -Query "Key = $Ticket"
+    }
+
+    It "Querying for missing issue does not throw" {
+        Get-Issue -Query "Key = $MissingTicket"
+    }
+
+    It "Get missing issue does not throw" {
+        Get-Issue -ID $MissingTicket
+    }
+
+    It "Invalid query should throw" {
+        {
+            Get-Issue -Query "INVALID_QUERY"
+        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
+        {
+            Get-Issue -Query "INVALID_FIELD = INVALID_VALUE"
+        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
+    }
 }
