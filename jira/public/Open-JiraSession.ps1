@@ -72,7 +72,7 @@ function Open-JiraSession
         if ($Save)
         {
             Write-Verbose "Saving URI [$Uri] for future use"
-            Set-PSFConfig -Module jira -Name Uri -Value $Uri -PassThru |
+            $null = Set-PSFConfig -Module jira -Name Uri -Value $Uri -PassThru |
                 Register-PSFConfig
 
             Write-Verbose "Storing [$Credential.UserName] credential for [$cmTarget]"
@@ -82,7 +82,7 @@ function Open-JiraSession
                 UserName       = $Credential.UserName
                 SecurePassword = $Credential.Password
             }
-            New-StoredCredential @storedCredential -Comment "for use with the Jira module"
+            $null = New-StoredCredential @storedCredential -Comment "for use with the Jira module"
         }
     }
 }
