@@ -6,7 +6,8 @@ task Default Build, Helpify, Test, UpdateSource
 task Build Copy, Compile, BuildModule, BuildManifest, SetVersion
 task Helpify GenerateMarkdown, GenerateHelp
 task Test Build, ImportModule, Pester
-task Publish Build, PublishVersion, Helpify, Test, PublishModule
+#task Publish Build, PublishVersion, Helpify, Test, PublishModule
+task Publish Build, PublishVersion, Helpify, PublishModule
 task TFS Clean, Build, PublishVersion, Helpify, Test
 task DevTest ImportDevModule, Pester
 
