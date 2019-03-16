@@ -18,6 +18,8 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
+- script: pwsh -Command {Install-Module PowerShellGet -Force}
+  displayName: 'Update powershellget'
 - script: pwsh -File build.ps1 Publish
   displayName: 'Build and Publish Module'
   env:
