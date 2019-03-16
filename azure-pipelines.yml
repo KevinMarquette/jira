@@ -15,7 +15,7 @@ trigger:
       - master
 
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'windows-2019'
 
 steps:
 - script: pwsh -File build.ps1 Publish
