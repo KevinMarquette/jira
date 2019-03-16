@@ -40,4 +40,31 @@ Describe "CmdLet Open-JiraSession" {
     It "Establishes a connection to Jira endpoint" {
         Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
+
+    It "Save parameter persists uri and credential" {
+        Mock -Verifiable -CommandName Set-PSFConfig -MockWith {}
+        Mock -Verifiable -CommandName New-StoredCredential -MockWith {}
+
+        Open-JiraSession -Credential $Credential -Uri $JiraUri
+
+        Assert-MockCalled -CommandName Set-PSFConfig -Times 0
+        Assert-MockCalled -CommandName New-StoredCredential -Times 0
+
+        Open-JiraSession -Credential $Credential -Uri $JiraUri -Save
+
+        Assert-MockCalled -CommandName Set-PSFConfig -Times 1
+        Assert-MockCalled -CommandName New-StoredCredential -Times 1
+    }
+
+    It "Use persisted values" {
+        Mock -Verifiable -CommandName Get-PSFConfigValue -MockWith {"https://contoso.com"}
+        Mock -Verifiable -CommandName New-StoredCredential -MockWith {[PSCredential]::Empty()}
+
+        {
+            Open-JiraSession
+        } | Should -Throw -ExceptionType ([JiraModule.JiraModuleException])
+
+        Assert-MockCalled -CommandName Get-PSFConfigValue -Times 1
+        Assert-MockCalled -CommandName New-StoredCredential -Times 1
+    }
 }

@@ -4,11 +4,7 @@ function Open-JiraSession
     param(
         [Parameter(
             Mandatory,
-            ParameterSetName = 'SaveCredential'
-        )]
-        [Parameter(
-            Mandatory,
-            ParameterSetName = 'ClearStoredCredential'
+            ParameterSetName = 'Save'
         )]
         [Parameter(
             ParameterSetName = 'Default'
@@ -17,34 +13,35 @@ function Open-JiraSession
         $Credential,
 
         [Parameter(
+            Mandatory,
+            ParameterSetName = 'Save',
+            Position = 0
+        )]
+        [Parameter(
+            ParameterSetName = 'Default',
             Position = 0
         )]
         [string]
         $Uri,
 
-        [Parameter(ParameterSetName = 'ClearStoredCredential')]
+        [Parameter(
+            ParameterSetName = 'Save'
+        )]
         [switch]
-        $ClearStoredCredential,
-
-        [Parameter(ParameterSetName = 'SaveCredential')]
-        [switch]
-        $SaveCredential,
-
-        [Parameter()]
-        [switch]
-        $SaveUri
+        $Save
     )
 
     begin
     {
         $cmTarget = 'JiraModule'
     }
+
     end
     {
         if ([string]::IsNullOrEmpty($Uri))
         {
             Write-Verbose "Using Saved Uri"
-            $Uri = Get-PSFConfig -Module jira -Name Uri
+            $Uri = Get-PSFConfigValue -FullName jira.Uri
 
             if ([string]::IsNullOrEmpty($Uri))
             {
@@ -54,29 +51,7 @@ function Open-JiraSession
             }
         }
 
-        if ($SaveUri)
-        {
-            Write-Verbose "Saving URI [$Uri] for future use"
-            Set-PSFConfig -Module jira -Name Uri -Value $Uri
-        }
-
-        if ($ClearStoredCredential)
-        {
-            Write-Verbose "Removing stored Credential for [$cmTarget]"
-            Remove-StoredCredential -Target $cmTarget -ErrorAction Ignore
-        }
-
-        if ($SaveCredential)
-        {
-            Write-Verbose "Storing [$Credential.UserName] credential for [$cmTarget]"
-
-            $storedCredential = @{
-                Target         = $cmTarget
-                UserName       = $Credential.UserName
-                SecurePassword = $Credential.Password
-            }
-            New-StoredCredential @storedCredential -Comment "for use with the Jira module"
-        }
+        Write-Verbose "Uri [$Uri]"
 
         if ($null -eq $Credential -or
             $Credential -eq [PScredential]::Empty)
@@ -91,6 +66,23 @@ function Open-JiraSession
             }
         }
 
+        Write-Verbose "Credential [$($credential.UserName)]"
         JiraModule\Open-JiraSession -Credential $Credential -Uri $uri
+
+        if ($Save)
+        {
+            Write-Verbose "Saving URI [$Uri] for future use"
+            Set-PSFConfig -Module jira -Name Uri -Value $Uri -PassThru |
+                Register-PSFConfig
+
+            Write-Verbose "Storing [$Credential.UserName] credential for [$cmTarget]"
+
+            $storedCredential = @{
+                Target         = $cmTarget
+                UserName       = $Credential.UserName
+                SecurePassword = $Credential.Password
+            }
+            New-StoredCredential @storedCredential -Comment "for use with the Jira module"
+        }
     }
 }

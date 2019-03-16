@@ -20,6 +20,6 @@ Describe "function Get-Issue" {
     It "Add comment by issue" {
         $issue = Get-Issue -ID $Ticket
         $issue | Should -Not -BeNullOrEmpty -Because 'We need a valid issue to test with'
-        $issue | Add-Comment -Comment "Test Comment 3"         
+        $issue | Add-Comment -Comment "Test Comment 3"
     }
 }
