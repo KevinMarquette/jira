@@ -21,13 +21,13 @@ ModuleVersion = '0.1.1'
 GUID = '629868f9-49ef-4b11-8dc5-d9c18a49146c'
 
 # Author of this module
-Author = 'loanDepot'
+Author = 'Kevin Marquette'
 
 # Company or vendor of this module
-CompanyName = 'loanDepot'
+CompanyName = 'PowerShellExplained.com'
 
 # Copyright statement for this module
-Copyright = '(c) 2019 loanDepot. All rights reserved.'
+Copyright = '(c) 2019 Kevin Marquette. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Module for working with Jira issues'
@@ -111,19 +111,21 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @('Jira')
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/KevinMarquette/jira/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/KevinMarquette/jira'
 
         # A URL to an icon representing this module.
         # IconUri = ''
 
         # ReleaseNotes of this module
         # ReleaseNotes = ''
+
+        Prerelease = '-alpha'
 
     } # End of PSData hashtable
 
