@@ -1,61 +1,38 @@
-push-location .\src
-dotnet clean
-dotnet publish
-Pop-Location
+[CmdletBinding()]
 
-Import-module .\src\bin\Debug\netstandard2.0\publish\jiraModule.dll
+param($Task = 'Default')
 
+$Script:Modules = @(
+    'BuildHelpers',
+    'InvokeBuild',
+    'Pester',
+    'platyPS',
+    'PSScriptAnalyzer',
+    'DependsOn'
+)
 
-$JiraUri = 'https://jira.loandepot.com'
-$Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
-$Ticket = "LDDTFT-13"
+$Script:ModuleInstallScope = 'CurrentUser'
 
-Open-JiraSession -Credential $Credential -Uri $JiraUri
-break;
+'Starting build...'
+'Installing module dependencies...'
 
-Measure-Command {
-    $a = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $null = $a.GetResult()
-}
-Measure-Command {
-    $a = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $null = $a.GetResult()
-    $b = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $null = $b.GetResult()
-    $c = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $null = $c.GetResult()
-}
+Get-PackageProvider -Name 'NuGet' -ForceBootstrap | Out-Null
 
-Measure-Command {
-    $a = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $b = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
-    $c = Get-Issue -Query 'status = "Ready for Release"' -Async -MaxResults 1000
+Update-LDModule -Name $Script:Modules -Scope $Script:ModuleInstallScope
 
-    $null = $a.GetResult()
-    $null = $b.GetResult()
-    $null = $c.GetResult()
-}
+Set-BuildEnvironment
+Get-ChildItem Env:BH*
+Get-ChildItem Env:APPVEYOR*
 
-$Ticket = "LDDTFT-1"
-$issue = 1..30 | %{"DTM-$_"}
+$Error.Clear()
 
+'Invoking build...'
 
-Measure-Command {
-    $a = $issue | %{Get-Issue -ID $_}
+Invoke-Build $Task -Result 'Result'
+if ($Result.Error)
+{
+    $Error[-1].ScriptStackTrace | Out-String
+    exit 1
 }
 
-
-Measure-Command {
-    $a = $issue | %{Get-Issue -ID $_ -Async} | Receive-AsyncResult
-}
-Measure-Command {
-    $a = $issue | %{Get-Issue -ID $_  -Async }
-    #$null = $a | Receive-AsyncResult
-}
-Measure-Command {
-    $a = Get-Issue -ID $issue
-}
-
-Measure-Command {
-    $a =  Get-Issue -ID $issue -Async | Receive-AsyncResult
-}
+exit 0
