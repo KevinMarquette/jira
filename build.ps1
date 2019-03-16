@@ -20,7 +20,7 @@ $Script:ModuleInstallScope = 'CurrentUser'
 
 Get-PackageProvider -Name 'NuGet' -ForceBootstrap | Out-Null
 
-Install-Module -Name $Script:Modules -Scope $Script:ModuleInstallScope -Force -AllowClober -AcceptLicense
+Install-Module -Name $Script:Modules -Scope $Script:ModuleInstallScope -Force
 
 Set-BuildEnvironment
 Get-ChildItem Env:BH*
