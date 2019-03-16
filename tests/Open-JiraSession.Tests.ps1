@@ -5,35 +5,35 @@ Describe "CmdLet Open-JiraSession" {
     }
 
     It "Invalid URI should throw" {
-        { 
-            Open-JiraSession -Credential $Credential -Uri "INVALID_URI" 
+        {
+            Open-JiraSession -Credential $Credential -Uri "INVALID_URI"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Invalid Hostname should throw" {
-        { 
-            Open-JiraSession -Credential $Credential -Uri "HTTP://MISSINGHOST" 
+        {
+            Open-JiraSession -Credential $Credential -Uri "HTTP://MISSINGHOST"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Unresponsive host should throw" {
-        { 
-            Open-JiraSession -Credential $Credential -Uri "https://localhost" 
+        {
+            Open-JiraSession -Credential $Credential -Uri "https://localhost"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Live but invalid endpoint should throw" {
-        { 
-            Open-JiraSession -Credential $Credential -Uri "https://devtools.ld.corp.local" 
+        {
+            Open-JiraSession -Credential $Credential -Uri "https://devtools.ld.corp.local"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
-    
+
     It "Bad Credential should throw" {
         $password = "mypassword" | ConvertTo-SecureString -asPlainText -Force
-        $username = "joedirt" 
+        $username = "joedirt"
         $badCredential = New-Object System.Management.Automation.PSCredential($username,$password)
-        { 
-            Open-JiraSession -Credential $badCredential -Uri $JiraUri 
+        {
+            Open-JiraSession -Credential $badCredential -Uri $JiraUri
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
