@@ -18,7 +18,7 @@ namespace JiraModule
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SetIssue : JiraCmdlet
     {
-        List<AsyncAction> startedTasks = new List<AsyncAction>();
+        List<AsyncResult> startedTasks = new List<AsyncResult>();
 
         [Alias("Key", "JiraID")]
         [Parameter(
@@ -41,7 +41,6 @@ namespace JiraModule
         public Issue InputObject { get; set; }
 
         [Parameter(
-            Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
         public string Project { get; set; }
@@ -62,7 +61,6 @@ namespace JiraModule
         public string Reporter { get; set; }
 
         [Parameter(
-            Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
         public string Summary { get; set; }
@@ -73,7 +71,6 @@ namespace JiraModule
         public string Priority { get; set; }
 
         [Parameter(
-            Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
         public string Type { get; set; }
@@ -98,7 +95,7 @@ namespace JiraModule
                     WriteVerbose(message);
 
                     startedTasks.Add(
-                        new AsyncAction(
+                        new AsyncResult(
                             message,
                             InputObject.SaveChangesAsync()
                         )
@@ -106,9 +103,11 @@ namespace JiraModule
                     break;
 
                 default:
+                    WriteVerbose("Updating issue");
                     var issues = new AsyncResult(
                         "Querying for tickets",
-                        JiraApi.Issues.GetIssuesAsync(ID)
+                        JiraApi.Issues.GetIssuesAsync(ID),
+                        result => { return result.Values; }
                     ).GetResult();
 
                     foreach (Issue issue in issues)
@@ -119,7 +118,7 @@ namespace JiraModule
                         WriteVerbose(message);
 
                         startedTasks.Add(
-                           new AsyncAction(
+                           new AsyncResult(
                                message,
                                InputObject.SaveChangesAsync()
                            )
@@ -157,7 +156,7 @@ namespace JiraModule
             }
             return issue;
         }
-        
+
         protected override void EndProcessing()
         {
             WriteDebug($"Processing [{startedTasks.Count}] running queries");

@@ -8,7 +8,7 @@ Import-module .\src\bin\Debug\netstandard2.0\publish\jiraModule.dll
 
 $JiraUri = 'https://jira.loandepot.com'
 $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
-$Ticket = "LDDTFT-19"
+$Ticket = "LDDTFT-13"
 
 Open-JiraSession -Credential $Credential -Uri $JiraUri
 break;
