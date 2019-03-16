@@ -97,7 +97,7 @@ task SetVersion {
         "    Using existing version"
         $version = $sourceVersion
     }
-
+    <#
     if ( -not [string]::IsNullOrEmpty( $env:Build_BuildID ) )
     {
         $build = $env:Build_BuildID
@@ -108,7 +108,7 @@ task SetVersion {
         $build = $env:APPVEYOR_BUILD_ID
         $version = [version]::new($version.Major, $version.Minor, $version.Build, $build)
     }
-
+    #>
     "  Setting version [$version]"
     Update-Metadata -Path $ManifestPath -PropertyName 'ModuleVersion' -Value $version
 
