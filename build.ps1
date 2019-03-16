@@ -8,7 +8,9 @@ $Script:Modules = @(
     'Pester',
     'platyPS',
     'PSScriptAnalyzer',
-    'DependsOn'
+    'DependsOn',
+    'PSFramework',
+    'CredentialManager'
 )
 
 $Script:ModuleInstallScope = 'CurrentUser'
