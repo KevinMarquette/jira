@@ -1,5 +1,5 @@
 InModuleScope jira {
-    Describe "function Remove-JiraSessionConfig" {
+    Describe "function Remove-JiraSessionConfig" -Tag Build {
         Mock -Verifiable -CommandName Unregister-PSFConfig -MockWith {$null}
         Mock -Verifiable -CommandName Remove-StoredCredential -MockWith {$null}
 

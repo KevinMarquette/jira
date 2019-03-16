@@ -1,11 +1,9 @@
-Describe "function Get-Issue" {
+Describe "function Get-Issue" -Tag Integration {
     BeforeAll {
-        $JiraUri = 'https://jira.loandepot.com'
-        $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
+        Open-JiraSession
+
         $Ticket = "LDDTFT-13"
         $MissingTicket = "MISSING-13"
-
-        Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
 
     It "Gets an issue by ID" {

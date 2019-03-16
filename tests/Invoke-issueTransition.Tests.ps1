@@ -1,11 +1,9 @@
-Describe "function Invoke-IssueTransition" {
+Describe "function Invoke-IssueTransition" -Tag Integration {
     BeforeAll {
-        $JiraUri = 'https://jira.loandepot.com'
-        $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
+        Open-JiraSession
+
         $Ticket = "LDDTFT-13"
         $MissingTicket = "MISSING-13"
-
-        Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
 
     BeforeEach {
@@ -17,7 +15,7 @@ Describe "function Invoke-IssueTransition" {
     }
 
     It "Transition by ID" {
-        
+
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
         Invoke-IssueTransition -ID $ticket -TransitionTo "In Progress"
         $issue.Refresh()
@@ -32,24 +30,24 @@ Describe "function Invoke-IssueTransition" {
         $issue | Invoke-IssueTransition -TransitionTo "In Progress"
         $issue.Status | Should -Be 'In Progress'
         $issue | Invoke-IssueTransition -TransitionTo "Open"
-        $issue.Status | Should -Be 'Open'       
+        $issue.Status | Should -Be 'Open'
     }
 
     It "Transition invalid ticket should throw" {
         {
             Invoke-IssueTransition -ID $MissingTicket -TransitionTo "In Progress"
-        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])   
+        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
     It "Transition invalid status should throw" {
         {
             Invoke-IssueTransition -ID $Ticket -TransitionTo "INVALID_STATUS"
-        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])   
+        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
     It "Transition invalid status should throw" {
         {
             $issue | Invoke-IssueTransition -TransitionTo "INVALID_STATUS"
-        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])   
+        } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 }

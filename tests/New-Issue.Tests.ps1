@@ -1,10 +1,7 @@
-Describe "function New-Issue" {
+Describe "function New-Issue" -Tag Integration {
     BeforeAll {
-        $JiraUri = 'https://jira.loandepot.com'
-        $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
+        Open-JiraSession
         $Project = "LDDTFT"
-    
-        Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
 
     It "Creates a ticket" {
@@ -17,7 +14,7 @@ Describe "function New-Issue" {
         $issueID = $issue.Key
         $issue | Should -Not -BeNullOrEmpty
         $issue | Remove-Issue
-        $issue2 = Get-Issue -ID $issueID   
+        $issue2 = Get-Issue -ID $issueID
         $issue2 | Should -BeNullOrEmpty
     }
 }

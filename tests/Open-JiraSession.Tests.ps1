@@ -1,4 +1,4 @@
-Describe "CmdLet Open-JiraSession" {
+Describe "CmdLet Open-JiraSession" -Tag Integration {
     BeforeAll {
         $JiraUri = 'https://jira.loandepot.com'
         $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local

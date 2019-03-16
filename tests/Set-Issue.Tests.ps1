@@ -1,11 +1,9 @@
-Describe "function Set-Issue" {
+Describe "function Set-Issue" -Tag Integration {
     BeforeAll {
-        $JiraUri = 'https://jira.loandepot.com'
-        $Credential = Get-LDRemoteCredential -RemoteTarget ld.corp.local
+        Open-JiraSession
         $Ticket = "LDDTFT-13"
         $MissingTicket = "MISSING-13"
 
-        Open-JiraSession -Credential $Credential -Uri $JiraUri
     }
 
     It "Sets the description on an issue using the pipe" {
