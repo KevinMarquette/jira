@@ -9,6 +9,6 @@ taskx Compile @{
         "Building Module"
         $csproj = Get-ChildItem -Path $BuildRoot -Include *.csproj -Recurse
         $folder = Split-Path $csproj
-        dotnet build $folder -c Release -o $Destination\bin
+        dotnet publish $folder -c Release -o $Destination\bin
     }
 }
