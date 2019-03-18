@@ -81,7 +81,7 @@ CmdletsToExport = @(
     'Save-Issue'
     'Set-Issue'
     'Add-Comment'
-    'Invoke-IssueTranstion'
+    'Invoke-IssueTransition'
     'Remove-issue'
     'Receive-AsyncResult'
 )

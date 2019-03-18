@@ -12,8 +12,8 @@ namespace JiraModule
     /// Transitions a jira issue to a new status
     /// </summary>
     [Cmdlet(
-        VerbsLifecycle.Invoke, 
-        "IssueTransition", 
+        VerbsLifecycle.Invoke,
+        "IssueTransition",
         DefaultParameterSetName = "IssueID"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
@@ -54,7 +54,7 @@ namespace JiraModule
         )]
         public string TransitionTo { get; set; }
 
-        // This method will be called for each input received from the 
+        // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
@@ -81,7 +81,7 @@ namespace JiraModule
             {
                 message = $"Transitioning issue [{InputObject.Key}] to [{TransitionTo}]";
                 WriteVerbose(message);
-                    
+
                 startedTasks.Add(
                     new AsyncAction(
                         message,
