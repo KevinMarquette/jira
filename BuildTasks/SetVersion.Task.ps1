@@ -54,7 +54,7 @@ task SetVersion {
 
     if($null -ne $publishedModule)
     {
-        [version] $publishedVersion = $publishedModule.Version
+        [version] $publishedVersion = ($publishedModule.Version -split '-')[0]
         "  Published version [$publishedVersion]"
 
         $version = $publishedVersion
