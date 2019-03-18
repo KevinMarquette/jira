@@ -61,6 +61,7 @@ namespace JiraModule
             string message = "";
             if (ParameterSetName == "IssueID")
             {
+                // make this more async
                 var issues = JiraApi.Issues.GetIssuesAsync(ID).GetAwaiter().GetResult();
                 foreach (Issue issue in issues.Values)
                 {
