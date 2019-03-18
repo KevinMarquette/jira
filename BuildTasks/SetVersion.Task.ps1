@@ -1,7 +1,33 @@
 function GetModulePublicInterfaceMap
 {
     param($Path)
-    $module = ImportModule -Path $Path -PassThru
+    Write-Verbose "Module path [$Path]"
+    $psd1 = Resolve-Path @("$Path\*\*.psd1")
+    if (-not $psd1)
+    {
+        $psd1 = $path
+    }
+    $metadata = Invoke-Expression (Get-Content -Path $psd1 -Raw)
+    $metadata.NestedModules
+    $metadata.RequiredModules
+    $metadata.FunctionsToExport
+    $metadata.CmdletsToExport
+    $metadata.AliasesToExport
+    $metadata.RootModule
+
+    if ($metadata.NestedModules -match '^bin.*dll$')
+    {
+        Write-Verbose 'Binary module detected, using simple interface' -Verbose
+        'Binary'
+        return
+    }
+
+    $psm1 = Resolve-Path @("$Path\*\*.psm1")
+    if (-not $psm1)
+    {
+        $psm1 = $path -replace 'psd1$','psm1'
+    }
+    $module = ImportModule -Path $psm1 -PassThru
     $exportedCommands = @(
         $module.ExportedFunctions.values
         $module.ExportedCmdlets.values

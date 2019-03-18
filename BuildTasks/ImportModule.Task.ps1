@@ -24,7 +24,7 @@ function ImportModule
         }
 
         "Importing Module [$name] from [$($file.fullname)]..."
-        Import-Module -Name $file.fullname -Force -PassThru:$PassThru
+        Import-Module -Name $file.fullname -Force -PassThru:$PassThru -ErrorAction Stop
     }
 }
 
