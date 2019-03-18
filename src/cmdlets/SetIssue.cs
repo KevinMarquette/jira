@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -80,8 +81,13 @@ namespace JiraModule
         )]
         public string ParentIssueKey { get; set; }
 
-        public bool PassThru {get;set;} = false;
-        // This method will be called for each input received from the 
+
+        [Parameter(
+            ValueFromPipelineByPropertyName = true
+        )]
+        public IDictionary CustomField { get; set; }
+        public bool PassThru { get; set; } = false;
+        // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
@@ -113,7 +119,7 @@ namespace JiraModule
                     foreach (Issue issue in issues)
                     {
                         SetIssueProperties(issue);
-                        
+
                         message = $"Saving [{InputObject.Key}]";
                         WriteVerbose(message);
 
@@ -154,6 +160,13 @@ namespace JiraModule
             {
                 issue.Type = Type;
             }
+            if (null != CustomField && CustomField.Count > 0)
+            {
+                foreach (string key in CustomField.Keys)
+                {
+                    issue[key] = CustomField[key]?.ToString();
+                }
+            }
             return issue;
         }
 
@@ -163,7 +176,7 @@ namespace JiraModule
             foreach (AsyncResult result in startedTasks)
             {
                 WriteDebug("Waiting for an async result to finish");
-                if(PassThru)
+                if (PassThru)
                 {
                     WriteObject(result.GetResult(), true);
                 }
