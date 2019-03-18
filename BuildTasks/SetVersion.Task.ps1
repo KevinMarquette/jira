@@ -49,7 +49,7 @@ task SetVersion {
 
     "Checking for published version"
     $publishedModule = Find-Module -Name $ModuleName -ErrorAction 'Ignore' -AllowPrerelease |
-        Sort-Object -Property {[version]$_.Version} -Descending |
+        Sort-Object -Property {[version]($_.Version -split '-')[0] } -Descending |
         Select -First 1
 
     if($null -ne $publishedModule)
