@@ -116,6 +116,12 @@ namespace JiraModule
                         result => { return result.Values; }
                     ).GetResult();
 
+                    if(null == issues || issues.Count == 0)
+                    {
+                        throw new JiraInvalidActionException(
+                            "No issues exist matching that issue ID"
+                        );
+                    }
                     foreach (Issue issue in issues)
                     {
                         SetIssueProperties(issue);
