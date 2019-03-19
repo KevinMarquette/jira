@@ -11,7 +11,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Open, "JiraSession")]
     public class JiraSession : JiraCmdlet
     {
-        
+
         [Parameter(
             Position = 1,
             ValueFromPipelineByPropertyName = true
@@ -45,14 +45,14 @@ namespace JiraModule
         {
             string username = Credential.UserName;
             string password = Credential.GetNetworkCredential().Password;
-            
+
             try
             {
                 string message = $"Connecting to Jira Endpoint [{Uri}] with Username [{Credential.UserName}]";
                 WriteVerbose(message);
 
                 JiraSession.jiraApi = Jira.CreateRestClient(Uri, username, password);
-                
+
                 WriteDebug("Issuing basic request to verify connectivity [Get Priorities]");
                 new AsyncResult(
                     message,

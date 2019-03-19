@@ -6,7 +6,7 @@ Module for working with Jira issues
 
 Clone this repository
 
-    git clone https://tfs/DevOps/_git/jira
+    git clone https://github.com/KevinMarquette/jira.git
 
 # Building
 

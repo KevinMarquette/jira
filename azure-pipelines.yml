@@ -8,6 +8,9 @@
 #  clean: true
 #  fetchDepth: 1
 
+pr:
+- master
+
 trigger:
   batch: true
   branches:
