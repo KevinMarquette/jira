@@ -7,12 +7,12 @@ namespace JiraModule
 {
     public class JiraModuleException : InvalidOperationException
     {
-        public JiraModuleException() 
+        public JiraModuleException()
             : base("Jira Module had an issue completing the opperation") {}
 
         public JiraModuleException(string message)
             : base(message) {}
-        
+
         public JiraModuleException(string message, Exception inner)
             : base(message, inner) {}
 
@@ -44,13 +44,13 @@ namespace JiraModule
             }
         }
 
-        public static string CreateExceptionMessage(string message, Exception ex)
+        public static string CreateExceptionMessage(string message, Exception exception)
         {
-            string exMessage = $"{ex.GetType()} with {message}:";
-                
+            string exMessage = $"{exception.GetType()} with {message}:";
+
             // Some exception messages include raw HTML from the remote endpoint
             var htmlCheck = new Regex("html|doctype",RegexOptions.IgnoreCase);
-            if(htmlCheck.IsMatch(ex.Message))
+            if(htmlCheck.IsMatch(exception.Message))
             {
                 exMessage += " Check the inner exception for the response from server. ";
             }
@@ -60,19 +60,33 @@ namespace JiraModule
                 var jsonResponseContent = new Regex(@"Response Content: (?<json>\{.*\})",RegexOptions.IgnoreCase);
 
                 // if we have a valid json structured error, clean it up and use it
-                Match jsonMatch = jsonResponseContent.Match(ex.Message);
+                Match jsonMatch = jsonResponseContent.Match(exception.Message);
                 if(jsonMatch.Success)
                 {
                     string json = jsonMatch.Groups["json"].Value;
-                    JiraStandardError errorInfo = JsonNet.Deserialize<JiraStandardError>(json);
-                    if(errorInfo.errorMessages?.Length > 0)
+                    JiraStandardError errorInfo = null;
+                    try
+                    {
+                        errorInfo = JsonNet.Deserialize<JiraStandardError>(json);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new JiraModuleException($"Issue parsing Json in message [{exception.Message}",ex);
+                    }
+
+                    if (errorInfo.errorMessages?.Length > 0)
                     {
                         exMessage += $" Message [{errorInfo.errorMessages[0]}]" ;
+                    }
+
+                    foreach(string key in errorInfo.errors.Keys)
+                    {
+                        exMessage += $" [{errorInfo.errors[key]}]";
                     }
                 }
                 else
                 {
-                    exMessage += $" Message [{ex.Message}]";
+                    exMessage += $" Message [{exception.Message}]";
                 }
             }
             return exMessage;
