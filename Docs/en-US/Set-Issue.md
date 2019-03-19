@@ -16,14 +16,14 @@ schema: 2.0.0
 ```
 Set-Issue [-ID] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
  [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
- [<CommonParameters>]
+ [-CustomField <IDictionary>] [<CommonParameters>]
 ```
 
 ### InputObject
 ```
 Set-Issue [-InputObject] <Issue> [-Project <String>] [-Assignee <String>] [-Description <String>]
  [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
- [<CommonParameters>]
+ [-CustomField <IDictionary>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,6 +45,21 @@ PS C:> {{ Add example code here }}
 
 ```yaml
 Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -CustomField
+{{ Fill CustomField Description }}
+
+```yaml
+Type: IDictionary
 Parameter Sets: (All)
 Aliases:
 

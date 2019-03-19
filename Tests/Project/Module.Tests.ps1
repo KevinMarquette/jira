@@ -1,5 +1,5 @@
-$Script:ModuleRoot = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
-$Script:ModuleName = $Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 | Select-object -ExpandProperty BaseName
+$Script:ModuleName = $Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 |
+    Select-object -ExpandProperty BaseName
 
 $Script:SourceRoot = Join-Path -Path $ModuleRoot -ChildPath $ModuleName
 

@@ -5,21 +5,15 @@ online version:
 schema: 2.0.0
 ---
 
-# Open-JiraSession
+# Remove-JiraSessionConfig
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### Default (Default)
 ```
-Open-JiraSession [-Credential <PSCredential>] [[-Uri] <String>] [<CommonParameters>]
-```
-
-### Save
-```
-Open-JiraSession -Credential <PSCredential> [-Uri] <String> [-Save] [<CommonParameters>]
+Remove-JiraSessionConfig [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,40 +30,13 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Credential
-{{ Fill Credential Description }}
-
-```yaml
-Type: PSCredential
-Parameter Sets: Default
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: PSCredential
-Parameter Sets: Save
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Save
-{{ Fill Save Description }}
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: Save
-Aliases:
+Parameter Sets: (All)
+Aliases: cf
 
 Required: False
 Position: Named
@@ -78,28 +45,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Uri
-{{ Fill Uri Description }}
+### -WhatIf
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
 
 ```yaml
-Type: String
-Parameter Sets: Default
-Aliases:
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: wi
 
 Required: False
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-```yaml
-Type: String
-Parameter Sets: Save
-Aliases:
-
-Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

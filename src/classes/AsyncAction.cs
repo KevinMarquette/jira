@@ -8,32 +8,32 @@ namespace JiraModule
         dynamic task;
 
         public string Description {get;set;}
-        TaskResultTransform resultTransform = 
+        TaskResultTransform resultTransform =
             result => { return result; };
-        
-        public int Id 
+
+        public int Id
             => task.Id;
-        
-        public bool IsCompleted 
+
+        public bool IsCompleted
             => task.IsCompleted;
 
-        public TaskStatus Status 
+        public TaskStatus Status
             => task.Status;
-        
-        public AggregateException Exception 
+
+        public AggregateException Exception
             => task.Exception;
-        
+
         /// <summary>
         /// Gets the internal Task of this object
         /// </summary>
         /// <returns>Task</returns>
-        public dynamic GetTask() 
+        public dynamic GetTask()
             => this.task;
-        
+
 
         public override string ToString()
             => $"AsyncAction[{Status}]";
-        
+
         public AsyncAction (string description, dynamic task)
         {
             this.task = task;
@@ -45,10 +45,10 @@ namespace JiraModule
         /// </summary>
         public void Wait()
         {
-            Action action = () 
+            Action action = ()
                 => this.task.GetAwaiter().GetResult();
 
-            JiraModuleException.Try(Description, action);            
+            JiraModuleException.Try(Description, action);
         }
     }
 }
