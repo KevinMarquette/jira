@@ -9,10 +9,9 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID
+    /// Remove issue by Key
     /// </summary>
     /// <notes>
-    /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
     [Cmdlet(VerbsCommon.Remove, "Issue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
@@ -28,7 +27,7 @@ namespace JiraModule
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
-        public string[] ID { get; set; }
+        public string[] Key { get; set; }
 
         /// <summary>
         /// Provides a mapping for an existing issue
@@ -41,7 +40,7 @@ namespace JiraModule
         )]
         public Issue InputObject { get; set; }
 
-        // This method will be called for each input received from the 
+        // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
@@ -49,7 +48,7 @@ namespace JiraModule
             {
                 string message = $"Removing issue [{InputObject.Key}]";
                 WriteVerbose(message);
-                    
+
                 string issueID = InputObject.Key.ToString();
                 startedTasks.Add(
                     new AsyncResult(
@@ -60,12 +59,12 @@ namespace JiraModule
             }
             else
             {
-                var results = from node in ID
+                var results = from node in Key
                     select new AsyncResult(
                         $"Removing issue [{InputObject.Key}]",
                         jiraApi.Issues.DeleteIssueAsync(node)
                     );
-                
+
                 startedTasks.AddRange(results);
             }
         }

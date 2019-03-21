@@ -9,10 +9,9 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID
+    /// Set issue properties
     /// </summary>
     /// <notes>
-    /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
     [Cmdlet(VerbsCommon.Set, "Issue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
@@ -21,14 +20,14 @@ namespace JiraModule
     {
         List<AsyncResult> startedTasks = new List<AsyncResult>();
 
-        [Alias("Key", "JiraID")]
+        [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
-        public string[] ID { get; set; }
+        public string[] Key { get; set; }
 
         /// <summary>
         /// Provides a mapping for an existing issue
@@ -112,14 +111,14 @@ namespace JiraModule
                     WriteVerbose("Updating issue");
                     var issues = new AsyncResult(
                         "Querying for tickets",
-                        JiraApi.Issues.GetIssuesAsync(ID),
+                        JiraApi.Issues.GetIssuesAsync(Key),
                         result => { return result.Values; }
                     ).GetResult();
 
                     if(null == issues || issues.Count == 0)
                     {
                         throw new JiraInvalidActionException(
-                            "No issues exist matching that issue ID"
+                            "No issues exist matching that issue key"
                         );
                     }
                     foreach (Issue issue in issues)

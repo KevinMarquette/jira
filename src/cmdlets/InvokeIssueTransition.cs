@@ -22,14 +22,14 @@ namespace JiraModule
     {
         List<AsyncAction> startedTasks = new List<AsyncAction>();
 
-        [Alias("Key", "JiraID")]
+        [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
-        public string[] ID { get; set; }
+        public string[] Key { get; set; }
 
         /// <summary>
         /// Provides a mapping for an existing issue
@@ -62,7 +62,7 @@ namespace JiraModule
             if (ParameterSetName == "IssueID")
             {
                 // make this more async
-                var issues = JiraApi.Issues.GetIssuesAsync(ID).GetAwaiter().GetResult();
+                var issues = JiraApi.Issues.GetIssuesAsync(Key).GetAwaiter().GetResult();
                 foreach (Issue issue in issues.Values)
                 {
                     message = $"Transitioning issue [{issue.Key}] to [{TransitionTo}]";

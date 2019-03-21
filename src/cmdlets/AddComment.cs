@@ -9,7 +9,7 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID
+    /// Gets Jira Issue by Key
     /// </summary>
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
@@ -21,14 +21,14 @@ namespace JiraModule
     {
         List<AsyncAction> startedTasks = new List<AsyncAction>();
 
-        [Alias("Key", "JiraID")]
+        [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
-        public string[] ID { get; set; }
+        public string[] Key { get; set; }
 
         /// <summary>
         /// Provides a mapping for an existing issue
@@ -48,7 +48,7 @@ namespace JiraModule
         )]
         public string Comment { get; set; }
 
-        // This method will be called for each input received from the 
+        // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
@@ -65,7 +65,7 @@ namespace JiraModule
                 Comment comment = new Comment();
                 comment.Body = Comment;
                 comment.Author = Environment.UserName;
-                var result = from node in ID
+                var result = from node in Key
                              select new AsyncAction(
                                  $"Add comment to issue [{node}]",
                                  JiraApi.Issues.AddCommentAsync(node, comment)

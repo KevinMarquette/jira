@@ -8,7 +8,7 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     /// <summary>
-    /// Gets Jira Issue by ID or Query
+    /// Gets Jira Issue by Key or Query
     /// </summary>
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
@@ -20,14 +20,14 @@ namespace JiraModule
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
-        [Alias("Key", "JiraID")]
+        [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
-        public string[] ID { get; set; }
+        public string[] Key { get; set; }
 
         /// <summary>
         /// Provides a mapping for an existing issue
@@ -67,7 +67,7 @@ namespace JiraModule
         public SwitchParameter Async { get; set; } = false;
 
 
-        // This method will be called for each input received from the 
+        // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
@@ -92,12 +92,12 @@ namespace JiraModule
                     break;
 
                 default:
-                    message = $"Starting query for [{ID}]";
+                    message = $"Starting query for [{Key}]";
                     WriteVerbose(message);
-                    var jiraTask = JiraApi.Issues.GetIssuesAsync(ID);
+                    var jiraTask = JiraApi.Issues.GetIssuesAsync(Key);
                     queryResult = new AsyncResult(
                         message,
-                        jiraTask, 
+                        jiraTask,
                         result => { return result.Values; }
                     );
                     break;
