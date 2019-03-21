@@ -20,7 +20,7 @@ namespace JiraModule
     {
         List<AsyncResult> startedTasks = new List<AsyncResult>();
 
-        [Alias("Key", "JiraID")]
+        [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
             Position = 0,

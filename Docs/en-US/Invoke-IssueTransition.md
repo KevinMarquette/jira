@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ### IssueID (Default)
 ```
-Invoke-IssueTransition [-ID] <String[]> [-TransitionTo] <String> [<CommonParameters>]
+Invoke-IssueTransition [-Key] <String[]> [-TransitionTo] <String> [<CommonParameters>]
 ```
 
 ### InputObject
@@ -36,21 +36,6 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -ID
-{{ Fill ID Description }}
-
-```yaml
-Type: String[]
-Parameter Sets: IssueID
-Aliases: Key, JiraID
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
 ### -InputObject
 {{ Fill InputObject Description }}
 
@@ -63,6 +48,21 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Key
+{{ Fill Key Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: IssueID
+Aliases: ID, JiraID
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
