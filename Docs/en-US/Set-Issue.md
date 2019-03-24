@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ### IssueID (Default)
 ```
-Set-Issue [-ID] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
+Set-Issue [-Key] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
  [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
  [-CustomField <IDictionary>] [<CommonParameters>]
 ```
@@ -85,21 +85,6 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -ID
-{{ Fill ID Description }}
-
-```yaml
-Type: String[]
-Parameter Sets: IssueID
-Aliases: Key, JiraID
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
 ### -InputObject
 {{ Fill InputObject Description }}
 
@@ -112,6 +97,21 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -Key
+{{ Fill Key Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: IssueID
+Aliases: ID, JiraID
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
