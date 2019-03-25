@@ -1,5 +1,6 @@
-function Open-JiraSession
+function Open-JSession
 {
+    [Alias("Open-JiraSession")]
     [cmdletbinding(DefaultParameterSetName = 'Default')]
     param(
         [Parameter(
@@ -67,7 +68,7 @@ function Open-JiraSession
         }
 
         Write-Verbose "Credential [$($credential.UserName)]"
-        JiraModule\Open-JiraSession -Credential $Credential -Uri $uri
+        JiraModule\Open-JSession -Credential $Credential -Uri $uri
 
         if ($Save)
         {

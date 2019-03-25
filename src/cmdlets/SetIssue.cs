@@ -13,7 +13,8 @@ namespace JiraModule
     /// </summary>
     /// <notes>
     /// </notes>
-    [Cmdlet(VerbsCommon.Set, "Issue", DefaultParameterSetName = "IssueID")]
+    [Alias("Set-Issue")]
+    [Cmdlet(VerbsCommon.Set, "JIssue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SetIssue : JiraCmdlet

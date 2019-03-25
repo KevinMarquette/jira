@@ -1,4 +1,4 @@
-Describe "CmdLet Open-JiraSession" -Tag Integration {
+Describe "CmdLet Open-JSession" -Tag Integration {
 
     BeforeAll {
         $password = "mypassword" |
@@ -9,36 +9,36 @@ Describe "CmdLet Open-JiraSession" -Tag Integration {
     }
     It "Invalid URI should throw" {
         {
-            Open-JiraSession -Uri "INVALID_URI"
+            Open-JSession -Uri "INVALID_URI"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Invalid Hostname should throw" {
         {
-            Open-JiraSession -Uri "HTTP://MISSINGHOST"
+            Open-JSession -Uri "HTTP://MISSINGHOST"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Unresponsive host should throw" {
         {
-            Open-JiraSession -Uri "https://localhost"
+            Open-JSession -Uri "https://localhost"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Live but invalid endpoint should throw" {
         {
-            Open-JiraSession -Uri "https://www.google.com"
+            Open-JSession -Uri "https://www.google.com"
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Bad Credential should throw" {
         {
-            Open-JiraSession -Credential $badCredential
+            Open-JSession -Credential $badCredential
         } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
     }
 
     It "Establishes a connection to Jira endpoint" {
-        Open-JiraSession
+        Open-JSession
     }
 
     It "Save parameter persists uri and credential" -Pending {
@@ -50,7 +50,7 @@ Describe "CmdLet Open-JiraSession" -Tag Integration {
                 Credential = $badCredential
                 Uri        = "https://www.google.com"
             }
-            Open-JiraSession @openJiraSessionSplat -ErrorAction Ignore
+            Open-JSession @openJiraSessionSplat -ErrorAction Ignore
         } | Should -Throw -ExceptionType ([JiraModule.JiraModuleException])
 
         Assert-MockCalled -CommandName Set-PSFConfig -Times 0
@@ -62,7 +62,7 @@ Describe "CmdLet Open-JiraSession" -Tag Integration {
                 Save       = $true
                 Uri        = "https://www.google.com"
             }
-            Open-JiraSession @openJiraSessionSplat
+            Open-JSession @openJiraSessionSplat
         } | Should -Throw -ExceptionType ([JiraModule.JiraModuleException])
 
         Assert-MockCalled -CommandName Set-PSFConfig -Times 1
@@ -78,7 +78,7 @@ Describe "CmdLet Open-JiraSession" -Tag Integration {
         }
 
         {
-            Open-JiraSession
+            Open-JSession
         } | Should -Throw -ExceptionType ([JiraModule.JiraModuleException])
 
         Assert-MockCalled -CommandName Get-PSFConfigValue -Times 1

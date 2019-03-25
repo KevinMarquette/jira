@@ -5,25 +5,16 @@ online version:
 schema: 2.0.0
 ---
 
-# Set-Issue
+# New-JIssue
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### IssueID (Default)
 ```
-Set-Issue [-ID] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
- [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
- [-CustomField <IDictionary>] [<CommonParameters>]
-```
-
-### InputObject
-```
-Set-Issue [-InputObject] <Issue> [-Project <String>] [-Assignee <String>] [-Description <String>]
- [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
- [-CustomField <IDictionary>] [<CommonParameters>]
+New-JIssue -Project <String> [-Assignee <String>] [-Description <String>] [-Reporter <String>]
+ -Summary <String> [-Priority <String>] -Type <String> [-ParentIssueKey <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -32,7 +23,7 @@ Set-Issue [-InputObject] <Issue> [-Project <String>] [-Assignee <String>] [-Desc
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
@@ -55,21 +46,6 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -CustomField
-{{ Fill CustomField Description }}
-
-```yaml
-Type: IDictionary
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
 ### -Description
 {{ Fill Description Description }}
 
@@ -82,36 +58,6 @@ Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -ID
-{{ Fill ID Description }}
-
-```yaml
-Type: String[]
-Parameter Sets: IssueID
-Aliases: Key, JiraID
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -InputObject
-{{ Fill InputObject Description }}
-
-```yaml
-Type: Issue
-Parameter Sets: InputObject
-Aliases:
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -153,7 +99,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -183,7 +129,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -198,7 +144,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -210,18 +156,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### System.String[]
-
-### Atlassian.Jira.Issue
-
 ### System.String
-
 ## OUTPUTS
 
 ### Atlassian.Jira.Issue
-
 ### JiraModule.AsyncResult
-
 ## NOTES
 
 ## RELATED LINKS

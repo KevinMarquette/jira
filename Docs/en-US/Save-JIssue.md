@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Save-Issue
+# Save-JIssue
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Save-Issue [[-Issue] <Issue>] [<CommonParameters>]
+Save-JIssue [[-Issue] <Issue>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,7 +22,7 @@ Save-Issue [[-Issue] <Issue>] [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
@@ -51,13 +51,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### Atlassian.Jira.Issue
-
 ## OUTPUTS
 
 ### Atlassian.Jira.Issue
-
 ### JiraModule.AsyncResult
-
 ## NOTES
 
 ## RELATED LINKS

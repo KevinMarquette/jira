@@ -1,5 +1,6 @@
-function Remove-JiraSessionConfig
+function Remove-JSessionConfig
 {
+    [Alias("Remove-JiraSessionConfig")]
     [cmdletbinding(SupportsShouldProcess)]
     param()
 

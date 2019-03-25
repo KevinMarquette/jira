@@ -5,26 +5,21 @@ online version:
 schema: 2.0.0
 ---
 
-# Add-Comment
+# Remove-JIssue
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### JiraID (Default)
+### IssueID (Default)
 ```
-Add-Comment [-Comment] <String> [<CommonParameters>]
-```
-
-### IssueID
-```
-Add-Comment [-Key] <String[]> [-Comment] <String> [<CommonParameters>]
+Remove-JIssue [-Key] <String[]> [<CommonParameters>]
 ```
 
 ### InputObject
 ```
-Add-Comment [-InputObject] <Issue> [-Comment] <String> [<CommonParameters>]
+Remove-JIssue [-InputObject] <Issue> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,28 +28,13 @@ Add-Comment [-InputObject] <Issue> [-Comment] <String> [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
 {{ Add example description here }}
 
 ## PARAMETERS
-
-### -Comment
-{{ Fill Comment Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
 
 ### -InputObject
 {{ Fill InputObject Description }}
@@ -92,17 +72,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String[]
-
 ### Atlassian.Jira.Issue
-
-### System.String
-
 ## OUTPUTS
 
 ### Atlassian.Jira.Issue
-
 ### JiraModule.AsyncResult
-
 ## NOTES
 
 ## RELATED LINKS

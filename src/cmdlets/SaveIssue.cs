@@ -11,7 +11,8 @@ namespace JiraModule
     /// <summary>
     /// Saves changes made to a Jira.Issue object
     /// </summary>
-    [Cmdlet(VerbsData.Save, "Issue")]
+    [Alias("Save-Issue")]
+    [Cmdlet(VerbsData.Save, "JIssue")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SaveIssue : Cmdlet

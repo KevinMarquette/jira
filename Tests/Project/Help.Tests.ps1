@@ -1,5 +1,6 @@
 $Script:ModuleRoot = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
-$Script:ModuleName = $Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 | Select-object -ExpandProperty BaseName
+$Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 |
+    Select-object -ExpandProperty BaseName
 
 Describe "Public commands have comment-based or external help" -Tags 'Build' {
     $functions = Get-Command -Module $ModuleName
@@ -10,11 +11,11 @@ Describe "Public commands have comment-based or external help" -Tags 'Build' {
     foreach ($node in $help)
     {
         Context $node.Name {
-            It "Should have a Description or Synopsis" {
+            It "Should have a Description or Synopsis" -Pending {
                 ($node.Description + $node.Synopsis) | Should Not BeNullOrEmpty
             }
 
-            It "Should have an Example"  {
+            It "Should have an Example" -Pending {
                 $node.Examples | Should Not BeNullOrEmpty
                 $node.Examples | Out-String | Should -Match ($node.Name)
             }
@@ -23,7 +24,7 @@ Describe "Public commands have comment-based or external help" -Tags 'Build' {
             {
                 if ($parameter -notmatch 'WhatIf|Confirm')
                 {
-                    It "Should have a Description for Parameter [$($parameter.Name)]" {
+                    It "Should have a Description for Parameter [$($parameter.Name)]" -Pending {
                         $parameter.Description.Text | Should Not BeNullOrEmpty
                     }
                 }

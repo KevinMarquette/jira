@@ -1,4 +1,5 @@
-$Script:ModuleName = $Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 |
+$Script:ModuleRoot = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
+$Script:ModuleName = Get-ChildItem $ModuleRoot\*\*.psm1 |
     Select-object -ExpandProperty BaseName
 
 $Script:SourceRoot = Join-Path -Path $ModuleRoot -ChildPath $ModuleName
@@ -33,7 +34,7 @@ Describe "All commands pass PSScriptAnalyzer rules" -Tag 'Build' {
 }
 
 Describe "Public commands have Pester tests" -Tag 'Build' {
-    $commands = Get-Command -Module $ModuleName
+    $commands = Get-Command -Module $ModuleName -CommandType Cmdlet,Function
 
     foreach ($command in $commands.Name)
     {
