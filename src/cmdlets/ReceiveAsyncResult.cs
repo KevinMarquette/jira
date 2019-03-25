@@ -10,10 +10,10 @@ namespace JiraModule
     /// <summary>
     /// <para type="synopsis">Waits for and unwrapps an Async result</para>
     /// <summary>
-    [Alias("Wait-AsyncResult", "Wait-JiraResult", "Receive-JiraResult")]
+    [Alias("Wait-AsyncResult", "Wait-JiraResult", "Receive-JiraResult","Receive-AsyncResult")]
     [Cmdlet(
-        VerbsCommunications.Receive, 
-        "AsyncResult", 
+        VerbsCommunications.Receive,
+        "JAsyncResult",
         DefaultParameterSetName = "AsyncResult"
     )]
     public class ReceiveResult : PSCmdlet

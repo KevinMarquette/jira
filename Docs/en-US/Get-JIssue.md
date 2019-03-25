@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Invoke-IssueTransition
+# Get-JIssue
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -14,12 +14,17 @@ schema: 2.0.0
 
 ### IssueID (Default)
 ```
-Invoke-IssueTransition [-Key] <String[]> [-TransitionTo] <String> [<CommonParameters>]
+Get-JIssue [-Key] <String[]> [-Async] [<CommonParameters>]
 ```
 
 ### InputObject
 ```
-Invoke-IssueTransition [-InputObject] <Issue> [-TransitionTo] <String> [<CommonParameters>]
+Get-JIssue [-InputObject] <Issue> [-Async] [<CommonParameters>]
+```
+
+### Query
+```
+Get-JIssue [-Query] <String> [[-MaxResults] <Int32>] [-StartAt <Int32>] [-Async] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,13 +33,28 @@ Invoke-IssueTransition [-InputObject] <Issue> [-TransitionTo] <String> [<CommonP
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
 {{ Add example description here }}
 
 ## PARAMETERS
+
+### -Async
+{{ Fill Async Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -InputObject
 {{ Fill InputObject Description }}
@@ -66,16 +86,46 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -TransitionTo
-{{ Fill TransitionTo Description }}
+### -MaxResults
+{{ Fill MaxResults Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: Query
+Aliases: Count
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Query
+{{ Fill Query Description }}
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases: Action, Target
+Parameter Sets: Query
+Aliases: JQL
 
 Required: True
-Position: 1
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -StartAt
+{{ Fill StartAt Description }}
+
+```yaml
+Type: Int32
+Parameter Sets: Query
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
@@ -87,17 +137,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String[]
-
 ### Atlassian.Jira.Issue
-
 ### System.String
-
+### System.Int32
 ## OUTPUTS
 
 ### Atlassian.Jira.Issue
-
 ### JiraModule.AsyncResult
-
 ## NOTES
 
 ## RELATED LINKS

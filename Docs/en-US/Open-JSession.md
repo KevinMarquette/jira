@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Open-JiraSession
+# Open-JSession
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -14,12 +14,12 @@ schema: 2.0.0
 
 ### Default (Default)
 ```
-Open-JiraSession [-Credential <PSCredential>] [[-Uri] <String>] [<CommonParameters>]
+Open-JSession [-Credential <PSCredential>] [[-Uri] <String>] [<CommonParameters>]
 ```
 
 ### Save
 ```
-Open-JiraSession -Credential <PSCredential> [-Uri] <String> [-Save] [<CommonParameters>]
+Open-JSession -Credential <PSCredential> [-Uri] <String> [-Save] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +28,7 @@ Open-JiraSession -Credential <PSCredential> [-Uri] <String> [-Save] [<CommonPara
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
@@ -73,7 +73,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -111,7 +111,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### None
-
 ## OUTPUTS
 
 ### System.Object

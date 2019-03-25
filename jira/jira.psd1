@@ -12,7 +12,7 @@
 RootModule = 'jira.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2.4'
+ModuleVersion = '0.3.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -72,18 +72,18 @@ RequiredModules = @(
 NestedModules = @('bin\JiraModule.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Open-JiraSession','Remove-JiraSessionConfig')
+FunctionsToExport = @('Open-JSession','Remove-JSessionConfig')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @(
-    'Get-Issue'
-    'New-Issue'
-    'Save-Issue'
-    'Set-Issue'
-    'Add-Comment'
-    'Invoke-IssueTransition'
-    'Remove-issue'
-    'Receive-AsyncResult'
+    'Get-JIssue'
+    'New-JIssue'
+    'Save-JIssue'
+    'Set-JIssue'
+    'Add-JComment'
+    'Invoke-JIssueTransition'
+    'Remove-JIssue'
+    'Receive-JAsyncResult'
 )
 
 # Variables to export from this module
@@ -94,6 +94,14 @@ AliasesToExport = @(
     'Wait-AsyncResult'
     'Wait-JiraResult'
     'Receive-JiraResult'
+    'Get-Issue'
+    'New-Issue'
+    'Save-Issue'
+    'Set-Issue'
+    'Add-Comment'
+    'Invoke-IssueTransition'
+    'Remove-issue'
+    'Receive-AsyncResult'
 )
 
 # DSC resources to export from this module

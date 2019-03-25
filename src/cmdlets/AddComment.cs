@@ -14,7 +14,8 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.Add, "Comment", DefaultParameterSetName = "JiraID")]
+    [Alias("Add-Comment")]
+    [Cmdlet(VerbsCommon.Add, "JComment", DefaultParameterSetName = "JiraID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class AddComment : JiraCmdlet

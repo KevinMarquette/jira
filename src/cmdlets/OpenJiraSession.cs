@@ -8,7 +8,8 @@ using Atlassian.Jira;
 
 namespace JiraModule
 {
-    [Cmdlet(VerbsCommon.Open, "JiraSession")]
+    [Alias("Open-JiraSession")]
+    [Cmdlet(VerbsCommon.Open, "JSession")]
     public class JiraSession : JiraCmdlet
     {
 

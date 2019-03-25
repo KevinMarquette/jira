@@ -13,7 +13,8 @@ namespace JiraModule
     /// </summary>
     /// <notes>
     /// </notes>
-    [Cmdlet(VerbsCommon.Remove, "Issue", DefaultParameterSetName = "IssueID")]
+    [Alias("Remove-Issue")]
+    [Cmdlet(VerbsCommon.Remove, "JIssue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class RemoveIssue : JiraCmdlet

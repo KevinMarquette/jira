@@ -1,19 +1,25 @@
 ---
-external help file: jira-help.xml
+external help file: JiraModule.dll-Help.xml
 Module Name: jira
 online version:
 schema: 2.0.0
 ---
 
-# Remove-JiraSessionConfig
+# Receive-JAsyncResult
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
+### AsyncResult (Default)
 ```
-Remove-JiraSessionConfig [-WhatIf] [-Confirm] [<CommonParameters>]
+Receive-JAsyncResult [-InputObject] <AsyncResult> [<CommonParameters>]
+```
+
+### AsyncAction
+```
+Receive-JAsyncResult [-AsyncAction] <AsyncAction> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,7 +28,7 @@ Remove-JiraSessionConfig [-WhatIf] [-Confirm] [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
@@ -30,34 +36,33 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
+### -AsyncAction
+{{ Fill AsyncAction Description }}
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
+Type: AsyncAction
+Parameter Sets: AsyncAction
+Aliases:
 
-Required: False
-Position: Named
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+### -InputObject
+{{ Fill InputObject Description }}
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: wi
+Type: AsyncResult
+Parameter Sets: AsyncResult
+Aliases: Result, AsyncResult
 
-Required: False
-Position: Named
+Required: True
+Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -66,8 +71,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
+### JiraModule.AsyncAction
+### JiraModule.AsyncResult
 ## OUTPUTS
 
 ### System.Object
