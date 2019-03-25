@@ -1,4 +1,4 @@
-Describe "function Get-JIssue" -Tag Integration {
+Describe "function Add-JComment" -Tag Integration {
     BeforeAll {
         Open-JSession
         $Ticket = "LDDTFT-13"
