@@ -1,6 +1,6 @@
 Describe "function New-Issue" -Tag Integration {
     BeforeAll {
-        Open-JiraSession
+        Open-JSession
         $Project = "LDDTFT"
     }
 
@@ -10,11 +10,11 @@ Describe "function New-Issue" -Tag Integration {
             Project = $Project
             Type    = "New Feature"
         }
-        $issue = New-Issue @newIssueSplat
+        $issue = New-JIssue @newIssueSplat
         $issueID = $issue.Key
         $issue | Should -Not -BeNullOrEmpty
-        $issue | Remove-Issue
-        $issue2 = Get-Issue -ID $issueID
+        $issue | Remove-JIssue
+        $issue2 = Get-JIssue -ID $issueID
         $issue2 | Should -BeNullOrEmpty
     }
 }

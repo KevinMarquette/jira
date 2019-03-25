@@ -13,7 +13,8 @@ namespace JiraModule
     /// <notes>
     /// The inputObject is the DefaultParameterSetName for a better pipeline experience
     /// </notes>
-    [Cmdlet(VerbsCommon.New, "Issue")]
+    [Alias("New-Issue")]
+    [Cmdlet(VerbsCommon.New, "JIssue")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class NewIssue : JiraCmdlet

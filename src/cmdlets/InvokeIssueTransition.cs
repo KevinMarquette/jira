@@ -11,9 +11,10 @@ namespace JiraModule
     /// <summary>
     /// Transitions a jira issue to a new status
     /// </summary>
+    [Alias("Invoke-IssueTransition")]
     [Cmdlet(
         VerbsLifecycle.Invoke,
-        "IssueTransition",
+        "JIssueTransition",
         DefaultParameterSetName = "IssueID"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]

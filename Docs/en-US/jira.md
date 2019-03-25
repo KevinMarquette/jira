@@ -11,27 +11,33 @@ Locale: en-US
 {{ Fill in the Description }}
 
 ## jira Cmdlets
-### [Open-JiraSession](Open-JiraSession.md)
+### [Open-JSession](Open-JSession.md)
 {{ Fill in the Description }}
 
-### [Add-Comment](Add-Comment.md)
+### [Remove-JSessionConfig](Remove-JSessionConfig.md)
 {{ Fill in the Description }}
 
-### [Get-Issue](Get-Issue.md)
+### [Add-JComment](Add-JComment.md)
 {{ Fill in the Description }}
 
-### [New-Issue](New-Issue.md)
+### [Get-JIssue](Get-JIssue.md)
 {{ Fill in the Description }}
 
-### [Receive-AsyncResult](Receive-AsyncResult.md)
+### [Invoke-JIssueTransition](Invoke-JIssueTransition.md)
 {{ Fill in the Description }}
 
-### [Remove-Issue](Remove-Issue.md)
+### [New-JIssue](New-JIssue.md)
 {{ Fill in the Description }}
 
-### [Save-Issue](Save-Issue.md)
+### [Receive-JAsyncResult](Receive-JAsyncResult.md)
 {{ Fill in the Description }}
 
-### [Set-Issue](Set-Issue.md)
+### [Remove-JIssue](Remove-JIssue.md)
+{{ Fill in the Description }}
+
+### [Save-JIssue](Save-JIssue.md)
+{{ Fill in the Description }}
+
+### [Set-JIssue](Set-JIssue.md)
 {{ Fill in the Description }}
 

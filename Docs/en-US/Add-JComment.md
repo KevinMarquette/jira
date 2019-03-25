@@ -5,21 +5,26 @@ online version:
 schema: 2.0.0
 ---
 
-# Remove-Issue
+# Add-JComment
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### IssueID (Default)
+### JiraID (Default)
 ```
-Remove-Issue [-ID] <String[]> [<CommonParameters>]
+Add-JComment [-Comment] <String> [<CommonParameters>]
+```
+
+### IssueID
+```
+Add-JComment [-Key] <String[]> [-Comment] <String> [<CommonParameters>]
 ```
 
 ### InputObject
 ```
-Remove-Issue [-InputObject] <Issue> [<CommonParameters>]
+Add-JComment [-InputObject] <Issue> [-Comment] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +33,7 @@ Remove-Issue [-InputObject] <Issue> [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```powershell
+```
 PS C:> {{ Add example code here }}
 ```
 
@@ -36,16 +41,16 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -ID
-{{ Fill ID Description }}
+### -Comment
+{{ Fill Comment Description }}
 
 ```yaml
-Type: String[]
-Parameter Sets: IssueID
-Aliases: Key, JiraID
+Type: String
+Parameter Sets: (All)
+Aliases:
 
 Required: True
-Position: 0
+Position: 1
 Default value: None
 Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
@@ -66,21 +71,33 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Key
+{{ Fill Key Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: IssueID
+Aliases: ID, JiraID
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### System.String[]
-
 ### Atlassian.Jira.Issue
-
+### System.String
 ## OUTPUTS
 
 ### Atlassian.Jira.Issue
-
 ### JiraModule.AsyncResult
-
 ## NOTES
 
 ## RELATED LINKS
