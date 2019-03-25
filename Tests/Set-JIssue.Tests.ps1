@@ -1,4 +1,4 @@
-Describe "function Set-Issue" -Tag Integration {
+Describe "function Set-JIssue" -Tag Integration {
     BeforeAll {
         Open-JSession
         $Ticket = "LDDTFT-13"

@@ -1,4 +1,4 @@
-Describe "function New-JIssue" -Tag Integration {
+Describe "function Remove-JIssue" -Tag Integration {
     BeforeAll {
         Open-JSession
         $Project = "LDDTFT"
@@ -6,7 +6,7 @@ Describe "function New-JIssue" -Tag Integration {
 
     It "Creates a ticket" {
         $newIssueSplat = @{
-            Summary = "test ticket 1"
+            Summary = "test ticket 2"
             Project = $Project
             Type    = "New Feature"
         }

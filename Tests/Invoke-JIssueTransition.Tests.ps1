@@ -1,4 +1,4 @@
-Describe "function Invoke-IssueTransition" -Tag Integration {
+Describe "function Invoke-JIssueTransition" -Tag Integration {
     BeforeAll {
         Open-JSession
 
