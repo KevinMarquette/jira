@@ -12,7 +12,7 @@
 RootModule = 'jira.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.3.0'
+ModuleVersion = '0.3.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -133,7 +133,7 @@ PrivateData = @{
         # ReleaseNotes of this module
         # ReleaseNotes = ''
 
-        Prerelease = '-alpha'
+        #Prerelease = '-alpha'
 
     } # End of PSData hashtable
 
