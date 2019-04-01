@@ -69,7 +69,7 @@ namespace JiraModule
                 var result = from node in Key
                              select new AsyncAction(
                                  $"Add comment to issue [{node}]",
-                                 JiraApi.Issues.AddCommentAsync(node, comment)
+                                 JSession.Issues.AddCommentAsync(node, comment)
                              );
 
                 startedTasks.AddRange(result);

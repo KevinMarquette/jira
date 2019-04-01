@@ -81,21 +81,21 @@ namespace JiraModule
                     string issueID = InputObject.Key.ToString();
                     message = $"Starting query for [{issueID}] from InputObject";
                     WriteVerbose(message);
-                    var task = JiraApi.Issues.GetIssueAsync(issueID);
+                    var task = JSession.Issues.GetIssueAsync(issueID);
                     queryResult = new AsyncResult(message,task);
                     break;
 
                 case "Query":
                     message = $"Starting JQL query [{Query}]";
                     WriteVerbose(message);
-                    var queryTask = JiraApi.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
+                    var queryTask = JSession.Issues.GetIssuesFromJqlAsync(Query, MaxResults, StartAt);
                     queryResult = new AsyncResult(message,queryTask);
                     break;
 
                 default:
                     message = $"Starting query for [{Key}]";
                     WriteVerbose(message);
-                    var jiraTask = JiraApi.Issues.GetIssuesAsync(Key);
+                    var jiraTask = JSession.Issues.GetIssuesAsync(Key);
                     queryResult = new AsyncResult(
                         message,
                         jiraTask,
