@@ -12,14 +12,14 @@ schema: 2.0.0
 
 ## SYNTAX
 
-### IssueID (Default)
+### InputObject (Default)
 ```
-Remove-JIssue [-Key] <String[]> [<CommonParameters>]
+Remove-JIssue -InputObject <Issue> [<CommonParameters>]
 ```
 
-### InputObject
+### IssueID
 ```
-Remove-JIssue [-InputObject] <Issue> [<CommonParameters>]
+Remove-JIssue [-Key] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ Parameter Sets: InputObject
 Aliases:
 
 Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
