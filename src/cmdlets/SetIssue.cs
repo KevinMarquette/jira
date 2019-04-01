@@ -14,7 +14,7 @@ namespace JiraModule
     /// <notes>
     /// </notes>
     [Alias("Set-Issue")]
-    [Cmdlet(VerbsCommon.Set, "JIssue", DefaultParameterSetName = "IssueID")]
+    [Cmdlet(VerbsCommon.Set, "JIssue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class SetIssue : JiraCmdlet
@@ -35,7 +35,6 @@ namespace JiraModule
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 0,
             ValueFromPipeline = true,
             ParameterSetName = "InputObject"
         )]
@@ -81,7 +80,6 @@ namespace JiraModule
         )]
         public string ParentIssueKey { get; set; }
 
-
         [Parameter(
             ValueFromPipelineByPropertyName = true
         )]
@@ -91,52 +89,65 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            string message = "";
+            WriteVerbose($"ParameterSetName [{ParameterSetName}]");
+
             switch (ParameterSetName)
             {
                 case "InputObject":
-                    SetIssueProperties(InputObject);
-
-                    message = $"Saving [{InputObject.Key}]";
-                    WriteVerbose(message);
-
-                    startedTasks.Add(
-                        new AsyncResult(
-                            message,
-                            InputObject.SaveChangesAsync()
-                        )
-                    );
+                    ProcessInputObject();
                     break;
 
                 default:
-                    WriteVerbose("Updating issue");
-                    var issues = new AsyncResult(
-                        "Querying for tickets",
-                        JiraApi.Issues.GetIssuesAsync(Key),
-                        result => { return result.Values; }
-                    ).GetResult();
-
-                    if(null == issues || issues.Count == 0)
-                    {
-                        throw new JiraInvalidActionException(
-                            "No issues exist matching that issue key"
-                        );
-                    }
-                    foreach (Issue issue in issues)
-                    {
-                        SetIssueProperties(issue);
-
-                        message = $"Saving [{InputObject.Key}]";
-                        WriteVerbose(message);
-
-                        startedTasks.Add(
-                           new AsyncResult(
-                               message,
-                               InputObject.SaveChangesAsync()
-                           )
-                       );
-                    }
+                    ProcessIssueKey();
                     break;
+            }
+        }
+
+        protected void ProcessInputObject()
+        {
+            SetIssueProperties(InputObject);
+
+            string message = $"Saving [{InputObject.Key}]";
+            WriteVerbose(message);
+
+            startedTasks.Add(
+                new AsyncResult(
+                    message,
+                    InputObject.SaveChangesAsync()
+                )
+            );
+        }
+
+
+        protected void ProcessIssueKey()
+        {
+            WriteVerbose("Updating issue");
+            var issues = new AsyncResult(
+                "Querying for tickets",
+                JSession.Issues.GetIssuesAsync(Key),
+                result => { return result.Values; }
+            ).GetResult();
+
+            if(null == issues || issues.Count == 0)
+            {
+                throw new JiraInvalidActionException(
+                    "No issues exist matching that issue key"
+                );
+            }
+
+            foreach (Issue issue in issues)
+            {
+                SetIssueProperties(issue);
+
+                string message = $"Saving [{issue.Key}]";
+                WriteVerbose(message);
+
+                startedTasks.Add(
+                    new AsyncResult(
+                        message,
+                        issue.SaveChangesAsync()
+                    )
+                );
             }
         }
 
