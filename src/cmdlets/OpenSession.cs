@@ -10,7 +10,7 @@ namespace JiraModule
 {
     [Alias("Open-JiraSession")]
     [Cmdlet(VerbsCommon.Open, "JSession")]
-    public class JiraSession : JiraCmdlet
+    public class OpenSession : JiraCmdlet
     {
 
         [Parameter(
@@ -33,12 +33,12 @@ namespace JiraModule
 
         protected override void EndProcessing()
         {
-            WriteVerbose($"Connectiong to Jira endpoint [{Uri}] with username [{Credential.UserName}]");
+            WriteVerbose($"Connection to Jira endpoint [{Uri}] with username [{Credential.UserName}]");
             CreateClient();
 
             if (PassThru)
             {
-                WriteObject(JiraApi);
+                WriteObject(new JSession());
             }
         }
 
@@ -52,18 +52,18 @@ namespace JiraModule
                 string message = $"Connecting to Jira Endpoint [{Uri}] with Username [{Credential.UserName}]";
                 WriteVerbose(message);
 
-                JiraSession.jiraApi = Jira.CreateRestClient(Uri, username, password);
+                JSession.Open(Uri, username, password);
 
                 WriteDebug("Issuing basic request to verify connectivity [Get Priorities]");
                 new AsyncResult(
                     message,
-                    JiraApi.Priorities.GetPrioritiesAsync()
+                    JSession.Api.Priorities.GetPrioritiesAsync()
                 ).Wait();
             }
             catch (Exception ex)
             {
                 // clear invalid session
-                JiraSession.jiraApi = null;
+                JSession.Close();
                 throw new JiraConnectionException(ex.Message,ex);
             }
         }

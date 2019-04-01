@@ -14,13 +14,13 @@ Describe "function Invoke-JIssueTransition" -Tag Integration {
         }
     }
 
-    It "Transition by ID" {
+    It "Transition by ID (by position)" {
 
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
-        Invoke-JIssueTransition -ID $ticket -TransitionTo "In Progress"
+        Invoke-JIssueTransition $ticket -TransitionTo "In Progress"
         $issue.Refresh()
         $issue.Status | Should -Be 'In Progress'
-        Invoke-JIssueTransition -ID $ticket -TransitionTo "Open"
+        Invoke-JIssueTransition $ticket -TransitionTo "Open"
         $issue.Refresh()
         $issue.Status | Should -Be 'Open'
     }
@@ -45,7 +45,7 @@ Describe "function Invoke-JIssueTransition" -Tag Integration {
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
-    It "Transition invalid status should throw" {
+    It "Transition invalid status by pipeline should throw" {
         {
             $issue | Invoke-JIssueTransition -TransitionTo "INVALID_STATUS"
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])

@@ -29,7 +29,11 @@ function Open-JSession
             ParameterSetName = 'Save'
         )]
         [switch]
-        $Save
+        $Save,
+
+        [Parameter()]
+        [switch]
+        $PassThru
     )
 
     begin
@@ -68,7 +72,7 @@ function Open-JSession
         }
 
         Write-Verbose "Credential [$($credential.UserName)]"
-        JiraModule\Open-JSession -Credential $Credential -Uri $uri
+        JiraModule\Open-JSession -Credential $Credential -Uri $uri -PassThru:$PassThru
 
         if ($Save)
         {

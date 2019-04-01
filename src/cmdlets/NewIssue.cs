@@ -68,7 +68,7 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            var issue = new Issue(JiraApi,Project,ParentIssueKey);
+            var issue = new Issue(JSession.Api,Project,ParentIssueKey);
             if( null != Assignee )
             {
                 issue.Assignee = Assignee;
@@ -96,10 +96,10 @@ namespace JiraModule
             // Create issue only returns the Key, so we also need the object
             var result = new AsyncResult(
                 $"Get new issue from project [{Project}]",
-                jiraApi.Issues.GetIssueAsync(
+                JSession.Issues.GetIssueAsync(
                     new AsyncResult(
                         $"Create new issue in project [{Project}]",
-                        JiraApi.Issues.CreateIssueAsync(issue)
+                        JSession.Issues.CreateIssueAsync(issue)
                     ).GetResult()
                 )
             );

@@ -12,16 +12,16 @@ schema: 2.0.0
 
 ## SYNTAX
 
-### IssueID (Default)
+### InputObject (Default)
 ```
-Set-JIssue [-Key] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
+Set-JIssue -InputObject <Issue> [-Project <String>] [-Assignee <String>] [-Description <String>]
  [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
  [-CustomField <IDictionary>] [<CommonParameters>]
 ```
 
-### InputObject
+### IssueID
 ```
-Set-JIssue [-InputObject] <Issue> [-Project <String>] [-Assignee <String>] [-Description <String>]
+Set-JIssue [-Key] <String[]> [-Project <String>] [-Assignee <String>] [-Description <String>]
  [-Reporter <String>] [-Summary <String>] [-Priority <String>] [-Type <String>] [-ParentIssueKey <String>]
  [-CustomField <IDictionary>] [<CommonParameters>]
 ```
@@ -94,7 +94,7 @@ Parameter Sets: InputObject
 Aliases:
 
 Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False

@@ -14,7 +14,7 @@ namespace JiraModule
     /// <notes>
     /// </notes>
     [Alias("Remove-Issue")]
-    [Cmdlet(VerbsCommon.Remove, "JIssue", DefaultParameterSetName = "IssueID")]
+    [Cmdlet(VerbsCommon.Remove, "JIssue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class RemoveIssue : JiraCmdlet
@@ -35,7 +35,6 @@ namespace JiraModule
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 0,
             ValueFromPipeline = true,
             ParameterSetName = "InputObject"
         )]
@@ -45,6 +44,7 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
+            WriteVerbose($"ParameterSetName [{ParameterSetName}]");
             if(ParameterSetName == "InputObject")
             {
                 string message = $"Removing issue [{InputObject.Key}]";
@@ -54,16 +54,17 @@ namespace JiraModule
                 startedTasks.Add(
                     new AsyncResult(
                         message,
-                        jiraApi.Issues.DeleteIssueAsync(issueID)
+                        JSession.Issues.DeleteIssueAsync(issueID)
                     )
                 );
             }
             else
             {
+                WriteVerbose("Removing issue by ID");
                 var results = from node in Key
                     select new AsyncResult(
-                        $"Removing issue [{InputObject.Key}]",
-                        jiraApi.Issues.DeleteIssueAsync(node)
+                        $"Removing issue [{node}]",
+                        JSession.Issues.DeleteIssueAsync(node)
                     );
 
                 startedTasks.AddRange(results);

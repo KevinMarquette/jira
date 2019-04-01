@@ -15,7 +15,7 @@ namespace JiraModule
     [Cmdlet(
         VerbsLifecycle.Invoke,
         "JIssueTransition",
-        DefaultParameterSetName = "IssueID"
+        DefaultParameterSetName = "InputObject"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
@@ -37,7 +37,6 @@ namespace JiraModule
         /// </summary>
         [Parameter(
             Mandatory = true,
-            Position = 0,
             ValueFromPipeline = true,
             ParameterSetName = "InputObject"
         )]
@@ -63,7 +62,11 @@ namespace JiraModule
             if (ParameterSetName == "IssueID")
             {
                 // make this more async
-                var issues = JiraApi.Issues.GetIssuesAsync(Key).GetAwaiter().GetResult();
+                var issues = JSession.Issues.GetIssuesAsync(Key).GetAwaiter().GetResult();
+                if(null == issues || issues.Count == 0)
+                {
+                    throw new JiraInvalidActionException($"No issue found matching key [{Key}]");
+                }
                 foreach (Issue issue in issues.Values)
                 {
                     message = $"Transitioning issue [{issue.Key}] to [{TransitionTo}]";
