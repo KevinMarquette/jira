@@ -12,14 +12,14 @@ schema: 2.0.0
 
 ## SYNTAX
 
-### IssueID (Default)
+### InputObject (Default)
 ```
-Invoke-JIssueTransition [-Key] <String[]> [-TransitionTo] <String> [<CommonParameters>]
+Invoke-JIssueTransition -InputObject <Issue> [-TransitionTo] <String> [<CommonParameters>]
 ```
 
-### InputObject
+### IssueID
 ```
-Invoke-JIssueTransition [-InputObject] <Issue> [-TransitionTo] <String> [<CommonParameters>]
+Invoke-JIssueTransition [-Key] <String[]> [-TransitionTo] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ Parameter Sets: InputObject
 Aliases:
 
 Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False

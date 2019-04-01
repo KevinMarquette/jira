@@ -3,29 +3,37 @@ Describe "function Save-JIssue" -Tag Integration {
         Open-JSession
         $Ticket = "LDDTFT-13"
         $MissingTicket = "MISSING-13"
+
     }
 
     It "Saves custom field value" {
-        $riskLevel = "4"
-        $name = 'Risk Level'
+
+        $value = "kmarquette"
+        $name = 'SDM'
+
+        $issue = Get-JIssue -ID $Ticket
+        $issue[$name] = ""
+
+        $issue | Save-JIssue
+
         $issue = Get-JIssue -ID $Ticket
         $issue2 = Get-JIssue -ID $Ticket
 
-        $issue[$name] | Should -Not -Be $riskLevel -Because "issue should have some other value to start with"
-        $issue2[$name] | Should -Not -Be $riskLevel -Because "issue2 should have some other value to start with"
+        $issue[$name] | Should -Not -Be $value -Because "issue should have some other value to start with"
+        $issue2[$name] | Should -Not -Be $value -Because "issue2 should have some other value to start with"
 
-        $issue[$name] = $riskLevel
+        $issue[$name] = $value
         # throws JiraModule.JiraInvalidActionException, need to fix
         $issue | Save-JIssue
 
-        $issue[$name] | Should -Be $riskLevel
+        $issue[$name] | Should -Be $value
 
-        $issue2[$name] | Should -Not -Be $riskLevel -Because "This is a second local copy that should not auto-update"
+        $issue2[$name] | Should -Not -Be $value -Because "This is a second local copy that should not auto-update"
         $issue2.Refresh()
-        $issue2[$name] | Should -Be $riskLevel
+        $issue2[$name] | Should -Be $value
 
         $issue3 = Get-JIssue -ID $Ticket
-        $issue3[$name] | Should -Be $riskLevel
+        $issue3[$name] | Should -Be $value
     }
 
     It "Sets the description on an issue using the pipe" {

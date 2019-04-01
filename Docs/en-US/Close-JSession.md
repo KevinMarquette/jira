@@ -5,21 +5,15 @@ online version:
 schema: 2.0.0
 ---
 
-# Remove-JIssue
+# Close-JSession
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### InputObject (Default)
 ```
-Remove-JIssue -InputObject <Issue> [<CommonParameters>]
-```
-
-### IssueID
-```
-Remove-JIssue [-Key] <String[]> [<CommonParameters>]
+Close-JSession [[-Session] <JSession>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +22,7 @@ Remove-JIssue [-Key] <String[]> [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:> {{ Add example code here }}
 ```
 
@@ -36,33 +30,18 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -InputObject
-{{ Fill InputObject Description }}
+### -Session
+{{ Fill Session Description }}
 
 ```yaml
-Type: Issue
-Parameter Sets: InputObject
+Type: JSession
+Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -Key
-{{ Fill Key Description }}
-
-```yaml
-Type: String[]
-Parameter Sets: IssueID
-Aliases: ID, JiraID
-
-Required: True
+Required: False
 Position: 0
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -71,12 +50,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### System.String[]
-### Atlassian.Jira.Issue
+### JiraModule.JSession
+
 ## OUTPUTS
 
-### Atlassian.Jira.Issue
-### JiraModule.AsyncResult
+### System.Object
 ## NOTES
 
 ## RELATED LINKS
