@@ -41,6 +41,11 @@ Describe "CmdLet Open-JSession" -Tag Integration {
         Open-JSession
     }
 
+    It "PassThru should return a JSession object" {
+        $result = Open-JSession -PassThru
+        $result | Should -Not -BeNullOrEmpty
+    }
+
     It "Save parameter persists uri and credential" -Pending {
         Mock -Verifiable -CommandName Set-PSFConfig -MockWith {}
         Mock -Verifiable -CommandName New-StoredCredential -MockWith {}
@@ -70,16 +75,22 @@ Describe "CmdLet Open-JSession" -Tag Integration {
     }
 
     It "Use persisted values" {
+
+        # Mocking the return of invalid values to get a specific exception
         Mock -Verifiable -CommandName Get-PSFConfigValue -MockWith {
-            "https://contoso.com"
+            "https://www.google.com"
         }
         Mock -Verifiable -CommandName Get-StoredCredential -MockWith {
-            [PSCredential]::Empty()
+            $password = "mypassword" |
+            ConvertTo-SecureString -asPlainText -Force
+
+            $username = "joedirt"
+            New-Object System.Management.Automation.PSCredential($username, $password)
         }
 
         {
-            Open-JSession
-        } | Should -Throw -ExceptionType ([JiraModule.JiraModuleException])
+            Open-JSession -ErrorAction Stop
+        } | Should -Throw -ExceptionType ([JiraModule.JiraConnectionException])
 
         Assert-MockCalled -CommandName Get-PSFConfigValue -Times 1
         Assert-MockCalled -CommandName Get-StoredCredential -Times 1
