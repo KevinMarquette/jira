@@ -11,22 +11,21 @@ namespace JiraModule
     /// <summary>
     /// Transitions a jira issue to a new status
     /// </summary>
-    [Alias("Invoke-IssueTransition")]
+    [Alias("Invoke-IssueTransition","Invoke-JIssueTransition")]
     [Cmdlet(
         VerbsLifecycle.Invoke,
-        "JIssueTransition",
+        "JIssueAction",
         DefaultParameterSetName = "InputObject"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class StepIssueTransition : JiraCmdlet
+    public class InvokeIssueAction : JiraCmdlet
     {
         List<AsyncAction> startedTasks = new List<AsyncAction>();
 
         [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
-            Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
@@ -46,10 +45,10 @@ namespace JiraModule
         /// The workflow value for the ticket transition
         /// </summary>
         /// <value></value>
-        [Alias("Action","Target")]
+        [Alias("Action","Transition","ActionName","Name")]
         [Parameter(
             Mandatory = true,
-            Position = 1,
+            Position = 0,
             ValueFromPipelineByPropertyName = true
         )]
         public string TransitionTo { get; set; }

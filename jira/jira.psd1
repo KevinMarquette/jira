@@ -81,7 +81,7 @@ CmdletsToExport = @(
     'Save-JIssue'
     'Set-JIssue'
     'Add-JComment'
-    'Invoke-JIssueTransition'
+    'Invoke-JIssueAction'
     'Remove-JIssue'
     'Receive-JAsyncResult'
     'Get-JSession'
@@ -102,6 +102,7 @@ AliasesToExport = @(
     'Set-Issue'
     'Add-Comment'
     'Invoke-IssueTransition'
+    'Invoke-JIssueTransition'
     'Remove-issue'
     'Receive-AsyncResult'
 )

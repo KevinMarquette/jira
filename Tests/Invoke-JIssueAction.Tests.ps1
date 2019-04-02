@@ -1,4 +1,4 @@
-Describe "function Invoke-JIssueTransition" -Tag Integration {
+Describe "function Invoke-JIssueAction" -Tag Integration {
     BeforeAll {
         Open-JSession
 
@@ -7,47 +7,47 @@ Describe "function Invoke-JIssueTransition" -Tag Integration {
     }
 
     BeforeEach {
-        $issue = Get-JIssue -ID $Ticket
+        $issue = Get-JIssue -Key $Ticket
         if("In Progress" -eq $issue.Status)
         {
-            $issue | Invoke-JIssueTransition -TransitionTo "Open"
+            $issue | Invoke-JIssueAction -Name "Open"
         }
     }
 
     It "Transition by ID (by position)" {
 
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
-        Invoke-JIssueTransition $ticket -TransitionTo "In Progress"
+        Invoke-JIssueAction -Key $ticket -TransitionTo "In Progress"
         $issue.Refresh()
         $issue.Status | Should -Be 'In Progress'
-        Invoke-JIssueTransition $ticket -TransitionTo "Open"
+        Invoke-JIssueAction -Key $ticket -TransitionTo "Open"
         $issue.Refresh()
         $issue.Status | Should -Be 'Open'
     }
 
     It "Transition by object" {
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
-        $issue | Invoke-JIssueTransition -TransitionTo "In Progress"
+        $issue | Invoke-JIssueAction -Name "In Progress"
         $issue.Status | Should -Be 'In Progress'
-        $issue | Invoke-JIssueTransition -TransitionTo "Open"
+        $issue | Invoke-JIssueAction -Name "Open"
         $issue.Status | Should -Be 'Open'
     }
 
     It "Transition invalid ticket should throw" {
         {
-            Invoke-JIssueTransition -ID $MissingTicket -TransitionTo "In Progress"
+            Invoke-JIssueAction -Key $MissingTicket -Name "In Progress"
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
     It "Transition invalid status should throw" {
         {
-            Invoke-JIssueTransition -ID $Ticket -TransitionTo "INVALID_STATUS"
+            Invoke-JIssueAction -Key $Ticket -Name "INVALID_STATUS"
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
     It "Transition invalid status by pipeline should throw" {
         {
-            $issue | Invoke-JIssueTransition -TransitionTo "INVALID_STATUS"
+            $issue | Invoke-JIssueAction -Name "INVALID_STATUS"
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 }
