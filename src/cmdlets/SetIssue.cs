@@ -33,6 +33,7 @@ namespace JiraModule
         /// <summary>
         /// Provides a mapping for an existing issue
         /// </summary>
+        [Alias("Issue")]
         [Parameter(
             Mandatory = true,
             ValueFromPipeline = true,
@@ -94,7 +95,7 @@ namespace JiraModule
             switch (ParameterSetName)
             {
                 case "InputObject":
-                    ProcessInputObject();
+                    SaveChanges(InputObject);
                     break;
 
                 default:
@@ -103,17 +104,17 @@ namespace JiraModule
             }
         }
 
-        protected void ProcessInputObject()
+        protected void SaveChanges(Issue issue)
         {
-            SetIssueProperties(InputObject);
+            SetIssueProperties(issue);
 
-            string message = $"Saving [{InputObject.Key}]";
+            string message = $"Saving [{issue.Key}]";
             WriteVerbose(message);
 
             startedTasks.Add(
                 new AsyncResult(
                     message,
-                    InputObject.SaveChangesAsync()
+                    issue.SaveChangesAsync()
                 )
             );
         }
@@ -123,7 +124,7 @@ namespace JiraModule
         {
             WriteVerbose("Updating issue");
             var issues = new AsyncResult(
-                "Querying for tickets",
+                "Querying for issues",
                 JSession.Issues.GetIssuesAsync(Key),
                 result => { return result.Values; }
             ).GetResult();
@@ -137,17 +138,7 @@ namespace JiraModule
 
             foreach (Issue issue in issues)
             {
-                SetIssueProperties(issue);
-
-                string message = $"Saving [{issue.Key}]";
-                WriteVerbose(message);
-
-                startedTasks.Add(
-                    new AsyncResult(
-                        message,
-                        issue.SaveChangesAsync()
-                    )
-                );
+                SaveChanges(issue);
             }
         }
 

@@ -12,7 +12,7 @@ Describe "function Get-JIssue" -Tag Integration {
         $issue.Key | Should -Be $Ticket
     }
 
-    It "Gets an issue by ID positionaly" {
+    It "Gets an issue by ID positionally" {
         $issue = Get-JIssue $Ticket
         $issue | Should -Not -BeNullOrEmpty
         $issue.Key | Should -Be $Ticket

@@ -11,22 +11,21 @@ namespace JiraModule
     /// <summary>
     /// Transitions a jira issue to a new status
     /// </summary>
-    [Alias("Invoke-IssueTransition")]
+    [Alias("Invoke-IssueTransition","Invoke-JIssueTransition")]
     [Cmdlet(
         VerbsLifecycle.Invoke,
-        "JIssueTransition",
+        "JIssueAction",
         DefaultParameterSetName = "InputObject"
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class StepIssueTransition : JiraCmdlet
+    public class InvokeIssueAction : JiraCmdlet
     {
         List<AsyncAction> startedTasks = new List<AsyncAction>();
 
         [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
-            Position = 0,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "IssueID"
         )]
@@ -35,6 +34,7 @@ namespace JiraModule
         /// <summary>
         /// Provides a mapping for an existing issue
         /// </summary>
+        [Alias("Issue")]
         [Parameter(
             Mandatory = true,
             ValueFromPipeline = true,
@@ -46,13 +46,13 @@ namespace JiraModule
         /// The workflow value for the ticket transition
         /// </summary>
         /// <value></value>
-        [Alias("Action","Target")]
+        [Alias("TransitionTo","Transition","ActionName","Name")]
         [Parameter(
             Mandatory = true,
-            Position = 1,
+            Position = 0,
             ValueFromPipelineByPropertyName = true
         )]
-        public string TransitionTo { get; set; }
+        public string Action { get; set; }
 
         // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
@@ -69,14 +69,14 @@ namespace JiraModule
                 }
                 foreach (Issue issue in issues.Values)
                 {
-                    message = $"Transitioning issue [{issue.Key}] to [{TransitionTo}]";
+                    message = $"Transitioning issue [{issue.Key}] to [{Action}]";
                     WriteVerbose(message);
 
                     startedTasks.Add(
                         new AsyncAction(
                             message,
                             issue.WorkflowTransitionAsync(
-                                TransitionTo
+                                Action
                             )
                         )
                     );
@@ -84,14 +84,14 @@ namespace JiraModule
             }
             else
             {
-                message = $"Transitioning issue [{InputObject.Key}] to [{TransitionTo}]";
+                message = $"Transitioning issue [{InputObject.Key}] to [{Action}]";
                 WriteVerbose(message);
 
                 startedTasks.Add(
                     new AsyncAction(
                         message,
                         InputObject.WorkflowTransitionAsync(
-                            TransitionTo
+                            Action
                         )
                     )
                 );
