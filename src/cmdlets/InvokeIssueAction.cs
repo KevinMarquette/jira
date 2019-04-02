@@ -45,13 +45,13 @@ namespace JiraModule
         /// The workflow value for the ticket transition
         /// </summary>
         /// <value></value>
-        [Alias("Action","Transition","ActionName","Name")]
+        [Alias("TransitionTo","Transition","ActionName","Name")]
         [Parameter(
             Mandatory = true,
             Position = 0,
             ValueFromPipelineByPropertyName = true
         )]
-        public string TransitionTo { get; set; }
+        public string Action { get; set; }
 
         // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called
@@ -68,14 +68,14 @@ namespace JiraModule
                 }
                 foreach (Issue issue in issues.Values)
                 {
-                    message = $"Transitioning issue [{issue.Key}] to [{TransitionTo}]";
+                    message = $"Transitioning issue [{issue.Key}] to [{Action}]";
                     WriteVerbose(message);
 
                     startedTasks.Add(
                         new AsyncAction(
                             message,
                             issue.WorkflowTransitionAsync(
-                                TransitionTo
+                                Action
                             )
                         )
                     );
@@ -83,14 +83,14 @@ namespace JiraModule
             }
             else
             {
-                message = $"Transitioning issue [{InputObject.Key}] to [{TransitionTo}]";
+                message = $"Transitioning issue [{InputObject.Key}] to [{Action}]";
                 WriteVerbose(message);
 
                 startedTasks.Add(
                     new AsyncAction(
                         message,
                         InputObject.WorkflowTransitionAsync(
-                            TransitionTo
+                            Action
                         )
                     )
                 );
