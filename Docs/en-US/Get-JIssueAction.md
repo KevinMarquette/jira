@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Invoke-JIssueAction
+# Get-JIssueAction
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -14,12 +14,12 @@ schema: 2.0.0
 
 ### InputObject (Default)
 ```
-Invoke-JIssueAction -InputObject <Issue> [-Action] <String> [<CommonParameters>]
+Get-JIssueAction [-InputObject] <Issue> [<CommonParameters>]
 ```
 
 ### IssueID
 ```
-Invoke-JIssueAction -Key <String[]> [-Action] <String> [<CommonParameters>]
+Get-JIssueAction [-Key] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,21 +36,6 @@ PS C:> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Action
-{{ Fill Action Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: TransitionTo, Transition, ActionName, Name
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
 ### -InputObject
 {{ Fill InputObject Description }}
 
@@ -60,7 +45,7 @@ Parameter Sets: InputObject
 Aliases:
 
 Required: True
-Position: Named
+Position: 0
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
@@ -75,7 +60,7 @@ Parameter Sets: IssueID
 Aliases: ID, JiraID
 
 Required: True
-Position: Named
+Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
@@ -89,8 +74,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### System.String[]
 
 ### Atlassian.Jira.Issue
-
-### System.String
 
 ## OUTPUTS
 

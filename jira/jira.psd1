@@ -82,6 +82,7 @@ CmdletsToExport = @(
     'Set-JIssue'
     'Add-JComment'
     'Invoke-JIssueAction'
+    'Get-JIssueAction'
     'Remove-JIssue'
     'Receive-JAsyncResult'
     'Get-JSession'

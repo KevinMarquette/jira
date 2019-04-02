@@ -14,7 +14,7 @@ Describe "function Invoke-JIssueAction" -Tag Integration {
         }
     }
 
-    It "Transition by ID (by position)" {
+    It "Transition by Key" {
 
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
         Invoke-JIssueAction -Key $ticket -TransitionTo "In Progress"
@@ -28,6 +28,17 @@ Describe "function Invoke-JIssueAction" -Tag Integration {
     It "Transition by object" {
         $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
         $issue | Invoke-JIssueAction -Name "In Progress"
+        $issue.Status | Should -Be 'In Progress'
+        $issue | Invoke-JIssueAction -Name "Open"
+        $issue.Status | Should -Be 'Open'
+    }
+
+    It "Transition by object and with issueAction" {
+        $issue.Status | Should -Be 'Open' -Because "We need a known starting point"
+        $action = $issue | Get-JIssueAction |
+            Where Action -EQ "In Progress"
+
+        $action | Invoke-JIssueAction -InputObject $issue
         $issue.Status | Should -Be 'In Progress'
         $issue | Invoke-JIssueAction -Name "Open"
         $issue.Status | Should -Be 'Open'

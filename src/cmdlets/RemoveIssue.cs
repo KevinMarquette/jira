@@ -33,6 +33,7 @@ namespace JiraModule
         /// <summary>
         /// Provides a mapping for an existing issue
         /// </summary>
+        [Alias("Issue")]
         [Parameter(
             Mandatory = true,
             ValueFromPipeline = true,
