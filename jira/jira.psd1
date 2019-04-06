@@ -88,6 +88,7 @@ CmdletsToExport = @(
     'Get-JSession'
     'Close-JSession'
     'Get-JVersion'
+    'New-JVersion'
 )
 
 # Variables to export from this module
