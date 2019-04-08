@@ -12,7 +12,7 @@
 RootModule = 'jira.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.3.3'
+ModuleVersion = '0.3.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -87,6 +87,8 @@ CmdletsToExport = @(
     'Receive-JAsyncResult'
     'Get-JSession'
     'Close-JSession'
+    'Get-JVersion'
+    'New-JVersion'
 )
 
 # Variables to export from this module

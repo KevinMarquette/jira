@@ -5,21 +5,15 @@ online version:
 schema: 2.0.0
 ---
 
-# Receive-JAsyncResult
+# New-JVersion
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
 
 ## SYNTAX
 
-### AsyncResult (Default)
 ```
-Receive-JAsyncResult [-InputObject] <AsyncResult> [<CommonParameters>]
-```
-
-### AsyncAction
-```
-Receive-JAsyncResult [-AsyncAction] <AsyncAction> [<CommonParameters>]
+New-JVersion [-Project] <String> -Name <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,41 +22,41 @@ Receive-JAsyncResult [-AsyncAction] <AsyncAction> [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```
-PS C:> {{ Add example code here }}
+```powershell
+PS C:\> {{ Add example code here }}
 ```
 
 {{ Add example description here }}
 
 ## PARAMETERS
 
-### -AsyncAction
-{{ Fill AsyncAction Description }}
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
-Type: AsyncAction
-Parameter Sets: AsyncAction
+Type: String
+Parameter Sets: (All)
+Aliases: Version, FixVersion
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Project
+{{ Fill Project Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -InputObject
-{{ Fill InputObject Description }}
-
-```yaml
-Type: AsyncResult
-Parameter Sets: AsyncResult
-Aliases: Result, AsyncResult
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -71,11 +65,14 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### JiraModule.AsyncAction
-### JiraModule.AsyncResult
+### System.String
+
 ## OUTPUTS
 
-### System.Object
+### Atlassian.Jira.Issue
+
+### JiraModule.AsyncResult
+
 ## NOTES
 
 ## RELATED LINKS
