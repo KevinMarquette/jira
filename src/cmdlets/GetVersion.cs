@@ -16,7 +16,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Get, "JVersion", DefaultParameterSetName = "Project")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class GetVersion : JiraCmdlet
+    public class GetVersion : PSCmdlet
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
@@ -33,8 +33,6 @@ namespace JiraModule
             ValueFromPipelineByPropertyName = true
         )]
         public string Id { get; set; }
-
-
 
         // This method will be called for each input received from the
         //pipeline to this cmdlet; if no input is received, this method is not called

@@ -17,7 +17,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Remove, "JIssue", DefaultParameterSetName = "InputObject")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class RemoveIssue : JiraCmdlet
+    public class RemoveIssue : AsyncActionCmdlet
     {
         List<AsyncResult> startedTasks = new List<AsyncResult>();
 
@@ -45,41 +45,34 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            WriteVerbose($"ParameterSetName [{ParameterSetName}]");
-            if(ParameterSetName == "InputObject")
+            WriteDebug($"ParameterSetName [{ParameterSetName}]");
+            switch (ParameterSetName)
             {
-                string message = $"Removing issue [{InputObject.Key}]";
-                WriteVerbose(message);
+                case "InputObject":
+                    DeleteIssue(InputObject.Key.ToString());
+                    break;
 
-                string issueID = InputObject.Key.ToString();
-                startedTasks.Add(
-                    new AsyncResult(
-                        message,
-                        JSession.Issues.DeleteIssueAsync(issueID)
-                    )
-                );
+                default:
+                    foreach(string node in Key)
+                    {
+                        WriteVerbose("Removing issue by ID");
+                        DeleteIssue(node);
+                    }
+                    break;
             }
-            else
-            {
-                WriteVerbose("Removing issue by ID");
-                var results = from node in Key
-                    select new AsyncResult(
-                        $"Removing issue [{node}]",
-                        JSession.Issues.DeleteIssueAsync(node)
-                    );
+        }
 
-                startedTasks.AddRange(results);
-            }
+        internal void DeleteIssue(string issueID)
+        {
+            StartAsyncTask(
+                $"Removing issue [{issueID}]",
+                JSession.Issues.DeleteIssueAsync(issueID)
+            );
         }
 
         protected override void EndProcessing()
         {
-            WriteDebug($"Processing [{startedTasks.Count}] running queries");
-            foreach (AsyncResult result in startedTasks)
-            {
-                WriteDebug("Waiting for an async result to finish");
-                result.Wait();
-            }
+            WaitAll();
         }
     }
 }

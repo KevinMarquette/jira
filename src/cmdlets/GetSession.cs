@@ -5,7 +5,7 @@ using Atlassian.Jira;
 namespace JiraModule
 {
     [Cmdlet(VerbsCommon.Get, "JSession")]
-    public class GetSession : JiraCmdlet
+    public class GetSession : PSCmdlet
     {
         protected override void EndProcessing()
         {

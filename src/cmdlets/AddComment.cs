@@ -18,7 +18,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Add, "JComment", DefaultParameterSetName = "JiraID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class AddComment : JiraCmdlet
+    public class AddComment : PSCmdlet
     {
         List<AsyncAction> startedTasks = new List<AsyncAction>();
 

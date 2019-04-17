@@ -16,7 +16,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.New, "JVersion")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class NewVersion : JiraCmdlet
+    public class NewVersion : Cmdlet
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
