@@ -19,8 +19,6 @@ namespace JiraModule
     [OutputType(typeof(JiraModule.AsyncResult))]
     public class RemoveIssue : AsyncActionCmdlet
     {
-        List<AsyncResult> startedTasks = new List<AsyncResult>();
-
         [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,

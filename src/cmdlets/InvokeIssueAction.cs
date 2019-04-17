@@ -11,7 +11,7 @@ namespace JiraModule
     /// <summary>
     /// Transitions a jira issue to a new status
     /// </summary>
-    [Alias("Invoke-IssueTransition","Invoke-JIssueTransition")]
+    [Alias("Invoke-IssueTransition", "Invoke-JIssueTransition")]
     [Cmdlet(
         VerbsLifecycle.Invoke,
         "JIssueAction",
@@ -19,10 +19,8 @@ namespace JiraModule
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class InvokeIssueAction : PSCmdlet
+    public class InvokeIssueAction : AsyncActionCmdlet
     {
-        List<AsyncAction> startedTasks = new List<AsyncAction>();
-
         [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
@@ -46,7 +44,7 @@ namespace JiraModule
         /// The workflow value for the ticket transition
         /// </summary>
         /// <value></value>
-        [Alias("TransitionTo","Transition","ActionName","Name")]
+        [Alias("TransitionTo", "Transition", "ActionName", "Name")]
         [Parameter(
             Mandatory = true,
             Position = 0,
@@ -58,54 +56,52 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            string message = "";
-            if (ParameterSetName == "IssueID")
+            switch (ParameterSetName)
             {
-                // make this more async
-                var issues = JSession.Issues.GetIssuesAsync(Key).GetAwaiter().GetResult();
-                if(null == issues || issues.Count == 0)
-                {
-                    throw new JiraInvalidActionException($"No issue found matching key [{Key}]");
-                }
-                foreach (Issue issue in issues.Values)
-                {
-                    message = $"Transitioning issue [{issue.Key}] to [{Action}]";
-                    WriteVerbose(message);
-
-                    startedTasks.Add(
-                        new AsyncAction(
-                            message,
-                            issue.WorkflowTransitionAsync(
-                                Action
-                            )
-                        )
-                    );
-                }
-            }
-            else
-            {
-                message = $"Transitioning issue [{InputObject.Key}] to [{Action}]";
-                WriteVerbose(message);
-
-                startedTasks.Add(
-                    new AsyncAction(
-                        message,
-                        InputObject.WorkflowTransitionAsync(
-                            Action
-                        )
-                    )
-                );
+                case "InputObject":
+                    TransitionIssue(InputObject,Action);
+                    break;
+                default:
+                    TransitionIssue(Key,Action);
+                    break;
             }
         }
 
+        internal void TransitionIssue(Issue issue, string action)
+        {
+            StartAsyncTask(
+                $"Transitioning issue [{issue.Key}] to [{action}]",
+                issue.WorkflowTransitionAsync(
+                    action
+                )
+            );
+        }
+
+        internal void TransitionIssue(string[] keys, string action)
+        {
+            WriteVerbose("Removing issue by Key");
+
+            var issues = JSession.Issues.GetIssuesAsync(keys).GetAwaiter().GetResult();
+            if (null == issues || issues.Count == 0)
+            {
+                string errorMessage = $"No issue found matching key [{string.Join(",", keys)}]";
+                WriteError(
+                    new ErrorRecord(
+                        new JiraInvalidActionException(errorMessage),
+                        errorMessage,
+                        ErrorCategory.WriteError,
+                        null
+                    )
+                );
+            }
+            foreach (Issue issue in issues.Values)
+            {
+                TransitionIssue(issue,action);
+            }
+        }
         protected override void EndProcessing()
         {
-            WriteDebug($"Processing [{startedTasks.Count}] running queries");
-            foreach (var result in startedTasks)
-            {
-                WriteDebug("Waiting for an async result to finish");
-                result.Wait();
-            }
+            WaitAll();
         }
     }
 }

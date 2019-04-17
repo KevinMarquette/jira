@@ -40,7 +40,7 @@ namespace JiraModule
                 {
                     WriteError(
                         new ErrorRecord(
-                            ex,"test", ErrorCategory.WriteError,null
+                            ex,query.Description,ErrorCategory.WriteError,null
                         )
                     );
                 }

@@ -46,13 +46,13 @@ Describe "function Invoke-JIssueAction" -Tag Integration {
 
     It "Transition invalid ticket should throw" {
         {
-            Invoke-JIssueAction -Key $MissingTicket -Name "In Progress"
+            Invoke-JIssueAction -Key $MissingTicket -Name "In Progress" -ErrorAction Stop
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 
     It "Transition invalid status should throw" {
         {
-            Invoke-JIssueAction -Key $Ticket -Name "INVALID_STATUS"
+            Invoke-JIssueAction -Key $Ticket -Name "INVALID_STATUS" -ErrorAction Stop
         } | Should -Throw -ExceptionType ([JiraModule.JiraInvalidActionException])
     }
 

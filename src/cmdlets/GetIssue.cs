@@ -94,7 +94,7 @@ namespace JiraModule
                     break;
 
                 default:
-                    message = $"Starting query for [{Key}]";
+                    message = $"Starting query for [{Key}] by key";
                     WriteVerbose(message);
                     var jiraTask = JSession.Issues.GetIssuesAsync(Key);
                     queryResult = new AsyncResult(
