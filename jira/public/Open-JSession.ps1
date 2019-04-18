@@ -1,6 +1,6 @@
 function Open-JSession
 {
-    [Alias("Open-JiraSession")]
+    [Alias("New-JSession")]
     [cmdletbinding(DefaultParameterSetName = 'Default')]
     param(
         [Parameter(
@@ -51,7 +51,7 @@ function Open-JSession
             if ([string]::IsNullOrEmpty($Uri))
             {
                 throw [JiraModule.JiraConnectionException]::new(
-                    'No Jira URI or server endpoint was provided, call Open-JiraSession -Uri https://myjiraserver.org -SaveUri'
+                    'No Jira URI or server endpoint was provided, call Open-JSession -Uri https://myjiraserver.org -SaveUri'
                 )
             }
         }
@@ -66,7 +66,7 @@ function Open-JSession
             if ($null -eq $Credential)
             {
                 throw [JiraModule.JiraAuthenticationException]::new(
-                    'No credential was provided and no previoud credential was saved. Run [Open-JiraSessions -Credential $Credential -SaveCredential]'
+                    'No credential was provided and no previoud credential was saved. Run [Open-JSession -Credential $Credential -SaveCredential]'
                 )
             }
         }
