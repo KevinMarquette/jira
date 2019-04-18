@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Atlassian.Jira;
 
 namespace JiraModule
 {
@@ -34,9 +35,14 @@ namespace JiraModule
         public override string ToString()
             => $"AsyncAction[{Status}]";
 
-        public AsyncAction (string description, dynamic task)
+        public AsyncAction (string description, Task task)
         {
             this.task = task;
+            this.Description = description;
+        }
+        public AsyncAction (string description, Func<Task<Issue>> action)
+        {
+            this.task = Task<Issue>.Run( async () => await action().ConfigureAwait(false));
             this.Description = description;
         }
 

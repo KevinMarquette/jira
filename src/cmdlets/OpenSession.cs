@@ -10,7 +10,7 @@ namespace JiraModule
 {
     [Alias("Open-JiraSession")]
     [Cmdlet(VerbsCommon.Open, "JSession")]
-    public class OpenSession : JiraCmdlet
+    public class OpenSession : Cmdlet
     {
 
         [Parameter(

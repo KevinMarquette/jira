@@ -17,7 +17,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.New, "JIssue")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class NewIssue : JiraCmdlet
+    public class NewIssue : PSCmdlet
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 

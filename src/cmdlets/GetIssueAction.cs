@@ -19,7 +19,7 @@ namespace JiraModule
     )]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class GetIssueAction : JiraCmdlet
+    public class GetIssueAction : PSCmdlet
     {
         List<AsyncResult> startedTasks = new List<AsyncResult>();
 

@@ -24,5 +24,14 @@
 
   "[xml]": {
     "editor.tabSize": 2
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#9e2a18",
+    "titleBar.inactiveBackground": "#9e2a1899",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveForeground": "#e7e7e799",
+    "statusBar.background": "#9e2a18",
+    "statusBarItem.hoverBackground": "#ca361f",
+    "statusBar.foreground": "#e7e7e7"
   }
 }

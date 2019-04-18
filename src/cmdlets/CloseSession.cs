@@ -4,7 +4,7 @@ using System.Management.Automation;
 namespace JiraModule
 {
     [Cmdlet(VerbsCommon.Close, "JSession")]
-    public class CloseSession : JiraCmdlet
+    public class CloseSession : PSCmdlet
     {
         /// <summary>
         /// Session to close

@@ -17,7 +17,7 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Get, "JIssue", DefaultParameterSetName = "IssueID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class GetIssue : JiraCmdlet
+    public class GetIssue : PSCmdlet
     {
         Queue<AsyncResult> startedTasks = new Queue<AsyncResult>();
 
@@ -94,7 +94,7 @@ namespace JiraModule
                     break;
 
                 default:
-                    message = $"Starting query for [{Key}]";
+                    message = $"Starting query for [{Key}] by key";
                     WriteVerbose(message);
                     var jiraTask = JSession.Issues.GetIssuesAsync(Key);
                     queryResult = new AsyncResult(
