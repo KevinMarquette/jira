@@ -18,10 +18,8 @@ namespace JiraModule
     [Cmdlet(VerbsCommon.Add, "JComment", DefaultParameterSetName = "JiraID")]
     [OutputType(typeof(Atlassian.Jira.Issue))]
     [OutputType(typeof(JiraModule.AsyncResult))]
-    public class AddComment : PSCmdlet
+    public class AddComment : AsyncActionCmdlet
     {
-        List<AsyncAction> startedTasks = new List<AsyncAction>();
-
         [Alias("ID", "JiraID")]
         [Parameter(
             Mandatory = true,
@@ -54,37 +52,42 @@ namespace JiraModule
         //pipeline to this cmdlet; if no input is received, this method is not called
         protected override void ProcessRecord()
         {
-            if (ParameterSetName == "InputObject")
+            switch (ParameterSetName)
             {
-                var result = new AsyncAction(
-                    $"Add comment to issue [{InputObject.Key}]",
-                    InputObject.AddCommentAsync(Comment)
-                );
-                startedTasks.Add(result);
+                case "InputObject":
+                    AddIssueComment(InputObject,Comment);
+                    break;
+                default:
+                    AddIssueComment(Key,Comment);
+                    break;
             }
-            else
-            {
-                Comment comment = new Comment();
-                comment.Body = Comment;
-                comment.Author = Environment.UserName;
-                var result = from node in Key
-                             select new AsyncAction(
-                                 $"Add comment to issue [{node}]",
-                                 JSession.Issues.AddCommentAsync(node, comment)
-                             );
+        }
 
-                startedTasks.AddRange(result);
+        internal void AddIssueComment(Issue issue, string comment)
+        {
+            StartAsyncTask(
+                $"Add comment to issue [{issue.Key}]",
+                issue.AddCommentAsync(comment)
+            );
+        }
+        internal void AddIssueComment(string[] keys, string comment)
+        {
+            Comment jiraComment = new Comment();
+            jiraComment.Body = Comment;
+            jiraComment.Author = Environment.UserName;
+
+            foreach(var key in keys)
+            {
+                StartAsyncTask(
+                    $"Add comment to issue [{key}]",
+                    JSession.Issues.AddCommentAsync(key, jiraComment)
+                );
             }
         }
 
         protected override void EndProcessing()
         {
-            WriteDebug($"Processing [{startedTasks.Count}] running queries");
-            foreach (var result in startedTasks)
-            {
-                WriteDebug("Waiting for an async result to finish");
-                result.Wait();
-            }
+            WaitAll();
         }
     }
 }

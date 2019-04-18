@@ -1,7 +1,7 @@
 Describe "JiraPS Get-JiraIssue" -Tag JiraPS {
 
     BeforeAll {
-        Open-JiraSession
+        Open-JSession
         $Ticket = "LDDTFT-13"
         $Credential = Get-StoredCredential -Target 'JiraModule'
         $Uri = Get-PSFConfigValue -FullName jira.Uri
